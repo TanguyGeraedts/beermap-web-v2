@@ -7,7 +7,7 @@ export const Card = ({ className, ...props }: CardProps) => {
   return (
     <div
       className={cn(
-        'rounded-lg border border-zinc-200 bg-white p-5 shadow-sm',
+        'rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-sm',
         className
       )}
       {...props}

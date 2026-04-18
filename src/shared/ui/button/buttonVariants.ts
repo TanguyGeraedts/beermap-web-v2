@@ -6,11 +6,11 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          'bg-teal-700 text-white shadow-sm hover:bg-teal-800 focus:ring-teal-600',
+          'bg-[var(--color-primary)] text-[var(--color-primary-contrast)] shadow-sm hover:bg-[var(--color-primary-hover)] focus:ring-[var(--color-ring)]',
         secondary:
-          'border border-zinc-300 bg-white text-zinc-900 hover:border-teal-600 hover:text-teal-700 focus:ring-teal-600',
+          'border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] focus:ring-[var(--color-ring)]',
         ghost:
-          'text-zinc-700 hover:bg-zinc-100 hover:text-zinc-950 focus:ring-zinc-400'
+          'text-[var(--color-muted)] hover:bg-[var(--color-surface-muted)] hover:text-[var(--color-text)] focus:ring-[var(--color-ring)]'
       },
       size: {
         sm: 'h-9 px-3',

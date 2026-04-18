@@ -16,17 +16,17 @@ export const PageHeader = ({
   return (
     <header>
       {eyebrow ? (
-        <p className="text-sm font-semibold uppercase tracking-wide text-teal-700">
+        <p className="text-sm font-semibold uppercase tracking-wide text-[var(--color-primary)]">
           {eyebrow}
         </p>
       ) : null}
       <div className="mt-4 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-4xl font-bold leading-tight text-zinc-950 sm:text-5xl">
+          <h1 className="text-4xl font-bold leading-tight text-[var(--color-text)] sm:text-5xl">
             {title}
           </h1>
           {description ? (
-            <p className="mt-5 max-w-xl text-lg leading-8 text-zinc-700">
+            <p className="mt-5 max-w-xl text-lg leading-8 text-[var(--color-muted)]">
               {description}
             </p>
           ) : null}
