@@ -2,7 +2,11 @@ import { useCallback, useState } from 'react';
 import { isAxiosError } from 'axios';
 import { profileService } from './profileService';
 import type { ProfileContextValue } from './profileContext';
-import type { CreateProfileRequest, MeResponse } from '../../shared/types';
+import type {
+  CreateProfileRequest,
+  MeResponse,
+  UpdateProfileRequest
+} from '../../shared/types';
 
 const isSetupRequired = (
   value: unknown
@@ -69,6 +73,25 @@ export const useMeController = (): ProfileContextValue => {
     }
   }, []);
 
+  const updateProfile = useCallback(async (payload: UpdateProfileRequest) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const updatedProfile = await profileService.updateMe(payload);
+      setProfile(updatedProfile);
+      setNeedsSetup(false);
+      return updatedProfile;
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : 'Failed to update profile';
+      setError(message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   const uploadProfileImage = useCallback(async (file: File) => {
     setError(null);
 
@@ -89,6 +112,7 @@ export const useMeController = (): ProfileContextValue => {
     error,
     refetch: fetchMe,
     createProfile,
+    updateProfile,
     uploadProfileImage
   };
 };

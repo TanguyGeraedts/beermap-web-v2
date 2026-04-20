@@ -24,6 +24,7 @@ export interface UpdateProfileRequest {
   username?: string | null;
   bio?: string | null;
   avatarUrl?: string | null;
+  discriminator?: string | null;
 }
 
 export interface CreateProfileRequest {

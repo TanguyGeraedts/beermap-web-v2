@@ -4,6 +4,7 @@ import { AdminGate } from '../features/profile/AdminGate';
 import { ProfileGate } from '../features/profile/ProfileGate';
 import { AppLayout } from './layout/AppLayout';
 import { AppProviders } from './providers/AppProviders';
+import { EditProfilePage } from '../pages/EditProfilePage';
 import { FeedPage } from '../pages/FeedPage';
 import { JournalPage } from '../pages/JournalPage';
 import { LoginPage } from '../pages/LoginPage';
@@ -35,6 +36,7 @@ const App = () => {
           <Route path="map" element={<MapPage />} />
           <Route path="sessions" element={<SessionsPage />} />
           <Route path="profile" element={<ProfilePage />} />
+          <Route path="profile/edit" element={<EditProfilePage />} />
           <Route path="profile/setup" element={<SetupProfilePage />} />
           <Route path="settings" element={<SettingsPage />} />
           <Route

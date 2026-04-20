@@ -69,7 +69,7 @@ export const SetupProfilePage = () => {
         description={
           step === 'name'
             ? 'Pick the name people will see next to your logs and sessions.'
-            : 'Add a photo and short description now, or leave them for later.'
+            : 'This part is optional. Add a photo and short description now, or skip both for later.'
         }
       />
 
@@ -89,7 +89,7 @@ export const SetupProfilePage = () => {
                 required
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
-                placeholder="Tanguy"
+                placeholder="Your name"
               />
             </Field>
 
@@ -102,6 +102,15 @@ export const SetupProfilePage = () => {
             className="grid gap-5"
             onSubmit={(event) => void handleSubmit(event)}
           >
+            <div className="rounded-lg border border-dashed border-[var(--color-border)] bg-[var(--color-surface-muted)] px-4 py-3">
+              <p className="text-sm font-semibold text-[var(--color-text)]">
+                Optional
+              </p>
+              <p className="mt-1 text-sm leading-5 text-[var(--color-muted)]">
+                You can create your profile without a picture or description.
+              </p>
+            </div>
+
             <div className="flex items-center gap-4">
               {avatarPreview ? (
                 <img
@@ -114,7 +123,11 @@ export const SetupProfilePage = () => {
                   <Upload className="size-6" aria-hidden="true" />
                 </div>
               )}
-              <Field label="Image" htmlFor="avatar" hint="Optional">
+              <Field
+                label="Profile image"
+                htmlFor="avatar"
+                hint="Optional. Add one now or leave it empty."
+              >
                 <label className="inline-flex h-11 cursor-pointer items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-4 text-sm font-semibold text-[var(--color-text)] shadow-sm">
                   {avatarLabel}
                   <input
@@ -128,14 +141,18 @@ export const SetupProfilePage = () => {
               </Field>
             </div>
 
-            <Field label="Description" htmlFor="bio" hint="Optional">
+            <Field
+              label="Description"
+              htmlFor="bio"
+              hint="Optional. A short line about you."
+            >
               <textarea
                 id="bio"
                 className="min-h-28 w-full resize-none rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-3 text-sm text-[var(--color-text)] shadow-sm outline-none transition placeholder:text-[var(--color-muted)] focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-ring-soft)]"
                 maxLength={160}
                 value={bio}
                 onChange={(event) => setBio(event.target.value)}
-                placeholder="Beer enthusiast"
+                placeholder="Add a short description"
               />
             </Field>
 

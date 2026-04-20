@@ -3,7 +3,8 @@ import type {
   CreateProfileRequest,
   CreateUploadUrlResponse,
   MeApiResponse,
-  MeResponse
+  MeResponse,
+  UpdateProfileRequest
 } from '../../shared/types';
 
 export const profileService = {
@@ -14,6 +15,11 @@ export const profileService = {
 
   createMe: async (payload: CreateProfileRequest) => {
     const { data } = await apiClient.post<MeResponse>('/users/me', payload);
+    return data;
+  },
+
+  updateMe: async (payload: UpdateProfileRequest) => {
+    const { data } = await apiClient.patch<MeResponse>('/users/me', payload);
     return data;
   },
 
