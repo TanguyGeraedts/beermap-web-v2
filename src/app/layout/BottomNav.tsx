@@ -35,40 +35,53 @@ export const BottomNav = () => {
   return (
     <nav
       className={cn(
-        'fixed bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-full border border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-surface)_92%,transparent)] shadow-[var(--shadow-nav)] backdrop-blur-xl transition-all duration-300',
+        'fixed bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-full border border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-surface)_92%,transparent)] shadow-[var(--shadow-nav)] backdrop-blur-xl transition-all duration-300',
         isExpanded ? 'px-3 py-3' : 'px-2 py-2'
       )}
       aria-label="Primary"
       onClick={() => setIsExpanded(true)}
     >
       <div className="flex items-center gap-1">
-        {navItems.map((item) => (
-          <NavLink
-            className={({ isActive }) =>
-              cn(
-                'flex items-center rounded-full text-sm font-semibold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)]',
-                isExpanded ? 'gap-2 px-3 py-2' : 'gap-0 px-2 py-2',
-                isActive
-                  ? 'bg-[var(--color-primary)] text-[var(--color-primary-contrast)]'
-                  : 'text-[var(--color-muted)] hover:bg-[var(--color-surface-muted)] hover:text-[var(--color-text)]'
-              )
-            }
-            key={item.to}
-            to={item.to}
-          >
-            <span className="grid size-6 place-items-center rounded-full bg-[color-mix(in_srgb,currentColor_12%,transparent)] text-xs">
-              {item.marker}
-            </span>
-            <span
-              className={cn(
-                'overflow-hidden whitespace-nowrap transition-all duration-300',
-                isExpanded ? 'max-w-16 opacity-100' : 'max-w-0 opacity-0'
-              )}
+        {navItems.map((item) => {
+          const Icon = item.icon;
+
+          return (
+            <NavLink
+              className={({ isActive }) =>
+                cn(
+                  'flex items-center justify-center rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)]',
+                  isActive
+                    ? 'h-12 gap-2 px-4'
+                    : isExpanded
+                      ? 'size-11'
+                      : 'size-9',
+                  isActive
+                    ? 'bg-[var(--color-primary)] text-[var(--color-primary-contrast)]'
+                    : 'text-[var(--color-muted)] hover:bg-[var(--color-surface-muted)] hover:text-[var(--color-text)]'
+                )
+              }
+              key={item.to}
+              to={item.to}
+              aria-label={item.label}
             >
-              {item.label}
-            </span>
-          </NavLink>
-        ))}
+              {({ isActive }) => (
+                <>
+                  <Icon
+                    className={cn(
+                      'shrink-0 transition-all duration-300',
+                      isExpanded || isActive ? 'size-5' : 'size-4'
+                    )}
+                    aria-hidden="true"
+                    strokeWidth={2.25}
+                  />
+                  {isActive ? (
+                    <span className="text-sm font-bold">{item.label}</span>
+                  ) : null}
+                </>
+              )}
+            </NavLink>
+          );
+        })}
       </div>
     </nav>
   );

@@ -1,39 +1,40 @@
-import { Button, Card } from '../../shared/ui';
+import { Moon, Sun } from 'lucide-react';
+import { cn } from '../../shared/lib/cn';
 import { useTheme } from './useTheme';
-import { themeNames, themes } from './themes';
 
 export const ThemeSelector = () => {
   const { theme, setTheme } = useTheme();
+  const isDark = theme === 'dark';
 
   return (
-    <div className="grid gap-3">
-      {themeNames.map((themeName) => {
-        const option = themes[themeName];
-        const isActive = themeName === theme;
-
-        return (
-          <Card
-            className="flex items-center justify-between gap-4"
-            key={themeName}
-          >
-            <div>
-              <p className="font-semibold text-[var(--color-text)]">
-                {option.label}
-              </p>
-              <p className="mt-1 text-sm text-[var(--color-muted)]">
-                {option.description}
-              </p>
-            </div>
-            <Button
-              size="sm"
-              variant={isActive ? 'primary' : 'secondary'}
-              onClick={() => setTheme(themeName)}
-            >
-              {isActive ? 'Active' : 'Use'}
-            </Button>
-          </Card>
-        );
-      })}
-    </div>
+    <button
+      className="inline-grid h-8 w-16 grid-cols-2 items-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface-muted)] p-1 text-[var(--color-muted)] shadow-sm transition"
+      type="button"
+      role="switch"
+      aria-checked={isDark}
+      aria-label="Toggle dark mode"
+      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+    >
+      <span
+        className={cn(
+          'grid size-6 place-items-center rounded-full transition',
+          !isDark
+            ? 'bg-[var(--color-primary)] text-[var(--color-primary-contrast)]'
+            : 'text-[var(--color-muted)]'
+        )}
+      >
+        <Sun className="size-3.5" aria-hidden="true" />
+      </span>
+      <span
+        className={cn(
+          'grid size-6 place-items-center rounded-full transition',
+          isDark
+            ? 'bg-[var(--color-primary)] text-[var(--color-primary-contrast)]'
+            : 'text-[var(--color-muted)]'
+        )}
+      >
+        <Moon className="size-3.5" aria-hidden="true" />
+      </span>
+    </button>
   );
 };
