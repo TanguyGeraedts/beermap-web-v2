@@ -1,4 +1,4 @@
-import { ButtonLink, Card, EmptyState, PageHeader } from '../shared/ui';
+import { ButtonLink, Card, EmptyState, PageHeader } from '@/components/ui';
 
 export const JournalPage = () => {
   return (

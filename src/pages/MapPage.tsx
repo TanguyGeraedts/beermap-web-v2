@@ -1,4 +1,4 @@
-import { EmptyState, PageHeader } from '../shared/ui';
+import { EmptyState, PageHeader } from '@/components/ui';
 
 export const MapPage = () => {
   return (

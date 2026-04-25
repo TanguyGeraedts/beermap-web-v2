@@ -6,7 +6,7 @@ import {
   Field,
   Input,
   PageHeader
-} from '../shared/ui';
+} from '@/components/ui';
 
 export const UiComponentsPage = () => {
   return (

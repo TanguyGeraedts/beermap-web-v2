@@ -1,4 +1,4 @@
-import { ButtonLink, EmptyState } from '../shared/ui';
+import { ButtonLink, EmptyState } from '@/components/ui';
 
 export const NotFoundPage = () => {
   return (

@@ -8,10 +8,10 @@ import {
   UsersRound
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Card, EmptyState } from '../shared/ui';
-import { useMe } from '../features/profile/useMe';
-import type { AccountType } from '../shared/types';
-import { cn } from '../shared/lib/cn';
+import { Card, EmptyState } from '@/components/ui';
+import { useMe } from '@/hooks/useMe';
+import type { AccountType } from '@/types';
+import { cn } from '@/utils/cn';
 
 const accountBadge = (accountType: AccountType) => {
   if (accountType === 'ADMIN') {

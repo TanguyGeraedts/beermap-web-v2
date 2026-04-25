@@ -1,7 +1,7 @@
 import { Navigate, useLocation } from 'react-router-dom';
-import { GoogleLoginButton } from '../features/auth/GoogleLoginButton';
-import { useAuth } from '../features/auth/useAuth';
-import { Card, PageHeader } from '../shared/ui';
+import { GoogleLoginButton } from '@/components/ui/GoogleLoginButton';
+import { Card, PageHeader } from '@/components/ui';
+import { useAuth } from '@/hooks/useAuth';
 
 type LocationState = {
   from?: {

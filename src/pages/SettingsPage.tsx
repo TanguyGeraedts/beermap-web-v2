@@ -10,10 +10,10 @@ import {
   Sun
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../features/auth/useAuth';
-import { useMe } from '../features/profile/useMe';
-import { useTheme } from '../features/theme/useTheme';
-import { cn } from '../shared/lib/cn';
+import { useAuth } from '@/hooks/useAuth';
+import { useMe } from '@/hooks/useMe';
+import { useTheme } from '@/hooks/useTheme';
+import { cn } from '@/utils/cn';
 
 type SectionLabelProps = {
   children: string;

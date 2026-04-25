@@ -1,8 +1,8 @@
 import { useMemo, useState, type ChangeEvent, type FormEvent } from 'react';
 import { Upload } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Card, Field, Input, PageHeader } from '../shared/ui';
-import { useMe } from '../features/profile/useMe';
+import { Button, Card, Field, Input, PageHeader } from '@/components/ui';
+import { useMe } from '@/hooks/useMe';
 
 type SetupStep = 'name' | 'details';
 

@@ -1,9 +1,9 @@
 import { useMemo, useState, type ChangeEvent, type FormEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Upload } from 'lucide-react';
-import { useMe } from '../features/profile/useMe';
-import { Button, Card, Field, Input, PageHeader } from '../shared/ui';
-import { cn } from '../shared/lib/cn';
+import { Button, Card, Field, Input, PageHeader } from '@/components/ui';
+import { useMe } from '@/hooks/useMe';
+import { cn } from '@/utils/cn';
 
 const BIO_MAX_LENGTH = 180;
 
