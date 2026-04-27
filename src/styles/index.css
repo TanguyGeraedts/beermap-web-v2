@@ -79,3 +79,21 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+@keyframes cheers-clink {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  28% {
+    transform: translateY(-4px) rotate(-12deg) scale(1.12);
+  }
+  54% {
+    transform: translateY(-2px) rotate(10deg) scale(1.15);
+  }
+  78% {
+    transform: translateY(-1px) rotate(-6deg) scale(1.06);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+}
