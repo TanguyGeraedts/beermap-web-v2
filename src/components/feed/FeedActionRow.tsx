@@ -25,9 +25,13 @@ export const FeedActionRow = ({
       <Button
         className={cn(
           'h-9 rounded-full px-4 text-base font-semibold',
-          cheeredByMe
-            ? 'bg-[#d8ecff] text-[#0a87dc] hover:bg-[#cfe7ff]'
-            : 'bg-[var(--color-surface-muted)] text-[#0a87dc] hover:bg-[color-mix(in_srgb,var(--color-surface-muted)_65%,#d8ecff)]'
+          // cheeredByMe
+          //   ? 'bg-[#d8ecff] text-[#0a87dc] hover:bg-[#cfe7ff]'
+          //   : 'bg-[var(--color-surface-muted)] text-[#0a87dc] hover:bg-[color-mix(in_srgb,var(--color-surface-muted)_65%,#d8ecff)]'
+            cheeredByMe
+                ? 'bg-[var(--color-primary)] text-white dark:text-white hover:opacity-90'
+                : 'bg-[var(--color-surface-muted)] text-[var(--color-primary)] hover:bg-[color-mix(in_srgb,var(--color-surface-muted)_65%,var(--color-primary))]'
+
         )}
         disabled={isTogglingCheers}
         onClick={() => {
