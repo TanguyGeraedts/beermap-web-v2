@@ -35,7 +35,7 @@ export const BottomNav = () => {
   return (
     <nav
       className={cn(
-        'fixed bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-full border border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-surface)_92%,transparent)] shadow-[var(--shadow-nav)] backdrop-blur-xl transition-all duration-300',
+        'fixed bottom-8 left-1/2 z-[1200] -translate-x-1/2 rounded-full bg-[color-mix(in_srgb,var(--color-surface)_92%,transparent)] shadow-[var(--shadow-nav)] backdrop-blur-xl transition-all duration-300',
         isExpanded ? 'px-3 py-3' : 'px-2 py-2'
       )}
       aria-label="Primary"

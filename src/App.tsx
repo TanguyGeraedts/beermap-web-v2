@@ -7,11 +7,12 @@ import { EditProfilePage } from '@/pages/EditProfilePage';
 import { FeedPage } from '@/pages/FeedPage';
 import { JournalPage } from '@/pages/JournalPage';
 import { LoginPage } from '@/pages/LoginPage';
-import { MapPage } from '@/pages/MapPage';
+import { LogBeerPage } from '@/pages/LogBeerPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { ProfilePage } from '@/pages/ProfilePage';
 import { SettingsPage } from '@/pages/SettingsPage';
 import { SetupProfilePage } from '@/pages/SetupProfilePage';
+import { SnapBeerDraftPage } from '@/pages/SnapBeerDraftPage';
 import { SessionsPage } from '@/pages/SessionsPage';
 import { UiComponentsPage } from '@/pages/UiComponentsPage';
 import { AppProviders } from '@/providers/AppProviders';
@@ -33,7 +34,9 @@ const App = () => {
           <Route index element={<Navigate to="/journal" replace />} />
           <Route path="journal" element={<JournalPage />} />
           <Route path="feed" element={<FeedPage />} />
-          <Route path="map" element={<MapPage />} />
+          <Route path="map" element={null} />
+          <Route path="beer/log" element={<LogBeerPage />} />
+          <Route path="beer/draft" element={<SnapBeerDraftPage />} />
           <Route path="sessions" element={<SessionsPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="profile/edit" element={<EditProfilePage />} />

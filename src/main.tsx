@@ -1,10 +1,11 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { registerSW } from 'virtual:pwa-register';
 import App from '@/App';
+import 'leaflet/dist/leaflet.css';
 import '@/styles/index.css';
+import { setupPwaUpdates } from '@/utils/pwa';
 
-registerSW({ immediate: true });
+setupPwaUpdates();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

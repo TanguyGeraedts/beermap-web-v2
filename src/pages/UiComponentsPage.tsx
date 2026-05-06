@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Button,
   ButtonLink,
@@ -7,8 +8,31 @@ import {
   Input,
   PageHeader
 } from '@/components/ui';
+import { checkForPwaUpdate } from '@/utils/pwa';
 
 export const UiComponentsPage = () => {
+  const [isCheckingUpdate, setIsCheckingUpdate] = useState(false);
+  const [updateStatus, setUpdateStatus] = useState<string | null>(null);
+
+  const handlePwaUpdate = async () => {
+    setIsCheckingUpdate(true);
+    setUpdateStatus(null);
+
+    try {
+      const hasServiceWorker = await checkForPwaUpdate();
+
+      setUpdateStatus(
+        hasServiceWorker
+          ? 'Checked for updates. If a new version exists, the app will refresh automatically.'
+          : 'No service worker registration found yet.'
+      );
+    } catch {
+      setUpdateStatus('Update check failed.');
+    } finally {
+      setIsCheckingUpdate(false);
+    }
+  };
+
   return (
     <div className="grid gap-6">
       <PageHeader
@@ -27,6 +51,25 @@ export const UiComponentsPage = () => {
           <Button variant="ghost">Ghost</Button>
           <Button size="sm">Small</Button>
           <Button disabled>Disabled</Button>
+        </div>
+      </Card>
+
+      <Card>
+        <h2 className="text-lg font-semibold text-[var(--color-text)]">
+          PWA updates
+        </h2>
+        <p className="mt-2 text-sm text-[var(--color-muted)]">
+          Force an update check and apply the latest version.
+        </p>
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <Button onClick={handlePwaUpdate} disabled={isCheckingUpdate}>
+            {isCheckingUpdate ? 'Checking…' : 'Update app now'}
+          </Button>
+          {updateStatus ? (
+            <span className="text-sm text-[var(--color-muted)]">
+              {updateStatus}
+            </span>
+          ) : null}
         </div>
       </Card>
 

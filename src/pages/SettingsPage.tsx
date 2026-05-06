@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useMapPreferences } from '@/hooks/useMapPreferences';
 import { useMe } from '@/hooks/useMe';
 import { useTheme } from '@/hooks/useTheme';
 import { cn } from '@/utils/cn';
@@ -54,9 +55,7 @@ export const SettingsPage = () => {
   const { logout } = useAuth();
   const { profile } = useMe();
   const { theme, setTheme } = useTheme();
-  const [mapStyle, setMapStyle] = useState<'default' | 'light' | 'dark'>(
-      'default'
-  );
+  const { mapStyle, setMapStyle } = useMapPreferences();
   const [ratingStyle, setRatingStyle] = useState<'stars' | 'beer-mugs'>(
       'stars'
   );
@@ -101,11 +100,11 @@ export const SettingsPage = () => {
             <SectionLabel id="map-section-title">Map style</SectionLabel>
             <div className="flex max-w-sm rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-1 shadow-sm">
               <SegmentButton
-                  isActive={mapStyle === 'default'}
-                  onClick={() => setMapStyle('default')}
+                  isActive={mapStyle === 'normal'}
+                  onClick={() => setMapStyle('normal')}
               >
                 <Map className="size-3.5" aria-hidden="true" />
-                Default
+                Normal
               </SegmentButton>
               <SegmentButton
                   isActive={mapStyle === 'light'}

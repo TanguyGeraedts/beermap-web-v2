@@ -1,6 +1,7 @@
 import { BrowserRouter } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import { AuthProvider } from '@/providers/AuthProvider';
+import { MapPreferencesProvider } from '@/providers/MapPreferencesProvider';
 import { ThemeProvider } from '@/providers/ThemeProvider';
 
 type AppProvidersProps = {
@@ -10,9 +11,11 @@ type AppProvidersProps = {
 export const AppProviders = ({ children }: AppProvidersProps) => {
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <BrowserRouter>{children}</BrowserRouter>
-      </AuthProvider>
+      <MapPreferencesProvider>
+        <AuthProvider>
+          <BrowserRouter>{children}</BrowserRouter>
+        </AuthProvider>
+      </MapPreferencesProvider>
     </ThemeProvider>
   );
 };
