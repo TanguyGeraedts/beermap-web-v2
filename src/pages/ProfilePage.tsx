@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from 'react';
 import {
   BarChart3,
   ChevronRight,
@@ -10,6 +11,7 @@ import {
 import { Link } from 'react-router-dom';
 import { Card, EmptyState } from '@/components/ui';
 import { useMe } from '@/hooks/useMe';
+import { statsService } from '@/services/statsService';
 import type { AccountType } from '@/types';
 import { cn } from '@/utils/cn';
 
@@ -35,13 +37,6 @@ const accountBadge = (accountType: AccountType) => {
   return null;
 };
 
-const stats = [
-  { label: 'Entries', value: '0' },
-  { label: 'Drinks', value: '0' },
-  { label: 'Days', value: '0' },
-  { label: 'Streak', value: '0' }
-];
-
 const SectionLabel = ({ children, id }: { children: string; id: string }) => (
     <h2
         className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-muted)]"
@@ -53,9 +48,43 @@ const SectionLabel = ({ children, id }: { children: string; id: string }) => (
 
 export const ProfilePage = () => {
   const { error, isLoading, needsSetup, profile, refetch } = useMe();
+  const [profileStats, setProfileStats] = useState<{
+    entries: number;
+    drinks: number;
+    days: number;
+    streak: number;
+  } | null>(null);
   const badge = profile ? accountBadge(profile.accountType) : null;
   const BadgeIcon = badge?.icon;
   const avatarInitial = profile?.username.charAt(0).toUpperCase() || 'B';
+
+  useEffect(() => {
+    const loadStats = async () => {
+      try {
+        const data = await statsService.getMyOverview();
+        setProfileStats({
+          entries: data.totals.totalEntries,
+          drinks: data.totals.totalDrinks,
+          days: data.totals.activeDays,
+          streak: data.time.streak
+        });
+      } catch {
+        setProfileStats(null);
+      }
+    };
+
+    void loadStats();
+  }, []);
+
+  const stats = useMemo(
+    () => [
+      { label: 'Entries', value: profileStats?.entries ?? '—' },
+      { label: 'Drinks', value: profileStats?.drinks ?? '—' },
+      { label: 'Days', value: profileStats?.days ?? '—' },
+      { label: 'Streak', value: profileStats?.streak ?? '—' }
+    ],
+    [profileStats]
+  );
 
   return (
       <div className="grid gap-5">
@@ -185,7 +214,7 @@ export const ProfilePage = () => {
 
           <Link
               className="flex min-h-11 items-center gap-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 text-[var(--color-text)] shadow-sm transition hover:border-[var(--color-primary)]"
-              to="/profile/stats"
+              to="/stats"
           >
             <BarChart3 className="size-4 shrink-0" aria-hidden="true" />
             <span className="min-w-0 flex-1 text-xs font-semibold">View all stats</span>

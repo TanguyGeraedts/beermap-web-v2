@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { navItems } from '@/constants/navItems';
 import { cn } from '@/utils/cn';
 
@@ -7,6 +7,7 @@ const idleDelay = 1800;
 
 export const BottomNav = () => {
   const [isExpanded, setIsExpanded] = useState(true);
+  const { pathname } = useLocation();
 
   useEffect(() => {
     let timeoutId = window.setTimeout(() => setIsExpanded(false), idleDelay);
@@ -44,18 +45,23 @@ export const BottomNav = () => {
       <div className="flex items-center gap-1">
         {navItems.map((item) => {
           const Icon = item.icon;
+          const isProfileSection =
+            item.to === '/profile' &&
+            (pathname.startsWith('/profile') ||
+              pathname.startsWith('/settings') ||
+              pathname.startsWith('/stats'));
 
           return (
             <NavLink
               className={({ isActive }) =>
                 cn(
                   'flex items-center justify-center rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)]',
-                  isActive
+                  isActive || isProfileSection
                     ? 'h-12 gap-2 px-4'
                     : isExpanded
                       ? 'size-11'
                       : 'size-9',
-                  isActive
+                  isActive || isProfileSection
                     ? 'bg-[var(--color-primary)] text-[var(--color-primary-contrast)]'
                     : 'text-[var(--color-muted)] hover:bg-[var(--color-surface-muted)] hover:text-[var(--color-text)]'
                 )
@@ -69,12 +75,14 @@ export const BottomNav = () => {
                   <Icon
                     className={cn(
                       'shrink-0 transition-all duration-300',
-                      isExpanded || isActive ? 'size-5' : 'size-4'
+                      isExpanded || isActive || isProfileSection
+                        ? 'size-5'
+                        : 'size-4'
                     )}
                     aria-hidden="true"
                     strokeWidth={2.25}
                   />
-                  {isActive ? (
+                  {isActive || isProfileSection ? (
                     <span className="text-sm font-bold">{item.label}</span>
                   ) : null}
                 </>

@@ -13,6 +13,7 @@ import { ProfilePage } from '@/pages/ProfilePage';
 import { SettingsPage } from '@/pages/SettingsPage';
 import { SetupProfilePage } from '@/pages/SetupProfilePage';
 import { SnapBeerDraftPage } from '@/pages/SnapBeerDraftPage';
+import { StatsPage } from '@/pages/StatsPage';
 import { SessionsPage } from '@/pages/SessionsPage';
 import { UiComponentsPage } from '@/pages/UiComponentsPage';
 import { AppProviders } from '@/providers/AppProviders';
@@ -37,6 +38,7 @@ const App = () => {
           <Route path="map" element={null} />
           <Route path="beer/log" element={<LogBeerPage />} />
           <Route path="beer/draft" element={<SnapBeerDraftPage />} />
+          <Route path="stats" element={<StatsPage />} />
           <Route path="sessions" element={<SessionsPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="profile/edit" element={<EditProfilePage />} />

@@ -59,8 +59,29 @@ export const SettingsPage = () => {
   const [ratingStyle, setRatingStyle] = useState<'stars' | 'beer-mugs'>(
       'stars'
   );
+  const [isCheckingUpdate, setIsCheckingUpdate] = useState(false);
+  const [updateStatus, setUpdateStatus] = useState<string | null>(null);
 
   const isAdmin = profile?.accountType === 'ADMIN';
+  const handlePwaUpdate = async () => {
+    setIsCheckingUpdate(true);
+    setUpdateStatus(null);
+
+    try {
+      const { checkForPwaUpdate } = await import('@/utils/pwa');
+      const hasServiceWorker = await checkForPwaUpdate();
+
+      setUpdateStatus(
+        hasServiceWorker
+          ? 'Checked for updates. If a new version exists, the app will refresh automatically.'
+          : 'No service worker registration found yet.'
+      );
+    } catch {
+      setUpdateStatus('Update check failed.');
+    } finally {
+      setIsCheckingUpdate(false);
+    }
+  };
 
   return (
       <div className="grid gap-5">
@@ -165,6 +186,33 @@ export const SettingsPage = () => {
                     aria-hidden="true"
                 />
               </Link>
+              <button
+                  className="flex min-h-12 items-center gap-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-left text-[var(--color-text)] shadow-sm transition hover:border-[var(--color-primary)]"
+                  type="button"
+                  onClick={handlePwaUpdate}
+                  disabled={isCheckingUpdate}
+              >
+            <span className="grid size-8 shrink-0 place-items-center rounded-md bg-[var(--color-surface-muted)] text-[var(--color-text)]">
+              <Component className="size-4" aria-hidden="true" />
+            </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-semibold">
+                    {isCheckingUpdate ? 'Checking update…' : 'Update app now'}
+                  </p>
+                  <p className="truncate text-[11px] text-[var(--color-muted)]">
+                    Force PWA update
+                  </p>
+                </div>
+                <ChevronRight
+                    className="size-4 shrink-0 text-[var(--color-muted)]"
+                    aria-hidden="true"
+                />
+              </button>
+              {updateStatus ? (
+                  <p className="text-[11px] text-[var(--color-muted)]">
+                    {updateStatus}
+                  </p>
+              ) : null}
             </section>
         )}
 
