@@ -1,6 +1,7 @@
 import { BrowserRouter } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import { AuthProvider } from '@/providers/AuthProvider';
+import {ProfileProvider} from "@/providers/ProfileProvider.tsx";
 
 type AppProvidersProps = {
   children: ReactNode;
@@ -8,8 +9,10 @@ type AppProvidersProps = {
 
 export const AppProviders = ({ children }: AppProvidersProps) => {
   return (
-    <AuthProvider>
-      <BrowserRouter>{children}</BrowserRouter>
-    </AuthProvider>
+      <AuthProvider>
+          <ProfileProvider>
+              <BrowserRouter>{children}</BrowserRouter>
+          </ProfileProvider>
+      </AuthProvider>
   );
 };
