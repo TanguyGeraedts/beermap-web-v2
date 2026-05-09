@@ -51,7 +51,6 @@ export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
             return `https://api.dicebear.com/7.x/${SELECTED_STYLE}/svg?seed=${encodeURIComponent(seed)}`;
         }, [fallback]);
 
-        // Prioritize src, but switch to DiceBear if src is null or errors out
         const finalSrc = (src && !imgError) ? src : diceBearUrl;
 
         return (
