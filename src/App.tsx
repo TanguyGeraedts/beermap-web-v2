@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { LoginPage } from './pages/LoginPage';
 import { HomeScreen } from './pages/HomeScreen';
 import { AppProviders } from './providers/AppProviders';
+import {UIComponentsPage} from "@/pages/UIComponentsPage.tsx";
 
 const App = () => {
     return (
@@ -10,6 +11,7 @@ const App = () => {
             <Routes>
                 {/* Home page */}
                 <Route path="/" element={<HomeScreen />} />
+                <Route path="/ui-components" element={<UIComponentsPage />} />
 
                 {/* Login page */}
                 <Route path="/login" element={<LoginPage />} />
