@@ -5,7 +5,7 @@ type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 type AvatarProps = HTMLAttributes<HTMLDivElement> & {
     src?: string;
     alt?: string;
-    fallback?: string; // initials or icon fallback
+    fallback?: string;
     size?: AvatarSize;
 };
 

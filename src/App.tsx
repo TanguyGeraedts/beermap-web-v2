@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { LoginPage } from './pages/LoginPage';
-import { HomeScreen } from './pages/HomeScreen';
+import { ProfilePage } from './pages/ProfilePage.tsx';
 import { AppProviders } from './providers/AppProviders';
 import {UIComponentsPage} from "@/pages/UIComponentsPage.tsx";
 
@@ -9,8 +9,10 @@ const App = () => {
     return (
         <AppProviders>
             <Routes>
-                {/* Home page */}
-                <Route path="/" element={<HomeScreen />} />
+                {/* Main pages */}
+                <Route path="/" element={<ProfilePage />} />
+
+                {/* Dev page */}
                 <Route path="/ui-components" element={<UIComponentsPage />} />
 
                 {/* Login page */}

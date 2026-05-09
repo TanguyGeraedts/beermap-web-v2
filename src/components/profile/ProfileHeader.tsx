@@ -1,5 +1,7 @@
 import React from 'react';
 import { MeResponse } from '@/types/auth';
+import { Avatar, Card } from "@/components/ui";
+import { UserRankPill } from "@/components/ui/components/UserRankPill";
 
 interface ProfileHeaderProps {
     profile: MeResponse | null;
@@ -9,29 +11,41 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ profile }) => {
     if (!profile) return null;
 
     return (
-        <div className="flex flex-col gap-2 p-4 border rounded-xl bg-card">
-            <p className="text-xs font-mono text-muted-foreground">
-                ID: {profile.id}
-            </p>
+        <div className="grid grid-cols-1 gap-4">
+            <Card variant="default">
+                <Card.Header>
+                    <div className="flex items-center gap-4">
+                        <Avatar
+                            src={profile.avatarUrl ?? ""}
+                            alt={`${profile.username}'s avatar`}
+                            size="lg"
+                        />
 
-            <h2 className="text-2xl font-bold tracking-tight">
-                {`${profile.username}#${profile.discriminator}`}
-            </h2>
+                        <div className="flex flex-col gap-1">
+                            <div className="flex items-center gap-2">
+                                <h3 className="text-lg font-bold text-(--color-text)">
+                                    {profile.username}#{profile.discriminator}
+                                </h3>
+                                <UserRankPill accountType={profile.accountType} />
+                            </div>
+                        </div>
+                    </div>
+                </Card.Header>
 
-            <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
-                    {profile.accountType}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                    Joined {new Date(profile.createdAt).toLocaleDateString()}
-                </span>
-            </div>
+                <Card.Body className="space-y-4">
+                    {profile.bio && (
+                        <p className="text-sm leading-relaxed text-(--color-text)">
+                            {profile.bio}
+                        </p>
+                    )}
 
-            {profile.bio && (
-                <p className="mt-2 text-sm leading-relaxed text-balance">
-                    {profile.bio}
-                </p>
-            )}
+                    <div className="pt-2 border-t border-(--color-border)">
+                        <p className="text-xs text-(--color-muted)">
+                            Member since {new Date(profile.createdAt).toLocaleDateString()}
+                        </p>
+                    </div>
+                </Card.Body>
+            </Card>
         </div>
     );
 };
