@@ -1,13 +1,19 @@
-import { forwardRef, type HTMLAttributes, useState } from 'react';
+import { forwardRef, type HTMLAttributes, useState, useMemo } from 'react';
+
+/**
+ * Configuration: Change this string to update the global fallback style.
+ * Options: 'identicon', 'pixel-art', 'bottts', 'lorelei', 'avataaars', etc.
+ */
+const SELECTED_STYLE = 'thumbs';
 
 type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
-type AvatarProps = HTMLAttributes<HTMLDivElement> & {
+interface AvatarProps extends HTMLAttributes<HTMLDivElement> {
     src?: string;
     alt?: string;
     fallback?: string;
     size?: AvatarSize;
-};
+}
 
 const sizeStyles: Record<AvatarSize, string> = {
     xs: 'w-6 h-6 text-xs',
@@ -17,23 +23,13 @@ const sizeStyles: Record<AvatarSize, string> = {
     xl: 'w-20 h-20 text-2xl',
 };
 
-const getInitials = (fallback: string) => {
-    return fallback
-        .split(' ')
-        .map((word) => word[0])
-        .join('')
-        .toUpperCase()
-        .slice(0, 2);
-};
-
 /**
  * Avatar component for user profile images.
- * Falls back to initials if image fails or no src provided.
+ * Defaults to a deterministic DiceBear image based on the 'fallback' prop
+ * if 'src' is missing or fails to load.
  *
  * @example
- * <Avatar src="/profile.jpg" alt="John Doe" size="md" />
- * <Avatar fallback="John Doe" size="lg" />
- * <Avatar size="sm" /> // generic fallback icon
+ * <Avatar src={profile.avatarUrl} fallback={profile.username} size="lg" />
  */
 export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
     (
@@ -48,43 +44,35 @@ export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
         ref
     ) => {
         const [imgError, setImgError] = useState(false);
-        const showImage = src && !imgError;
         const sizeClass = sizeStyles[size];
+
+        const diceBearUrl = useMemo(() => {
+            const seed = fallback || 'default';
+            return `https://api.dicebear.com/7.x/${SELECTED_STYLE}/svg?seed=${encodeURIComponent(seed)}`;
+        }, [fallback]);
+
+        // Prioritize src, but switch to DiceBear if src is null or errors out
+        const finalSrc = (src && !imgError) ? src : diceBearUrl;
 
         return (
             <div
                 ref={ref}
                 className={`
-          relative inline-flex items-center justify-center
-          rounded-full overflow-hidden shrink-0
-          bg-(--color-surface-muted)
-          border border-(--color-border)
-          ${sizeClass}
-          ${className}
-        `}
+                    relative inline-flex items-center justify-center
+                    rounded-full overflow-hidden shrink-0
+                    bg-(--color-surface-muted)
+                    border border-(--color-border)
+                    ${sizeClass}
+                    ${className}
+                `}
                 {...props}
             >
-                {showImage ? (
-                    <img
-                        src={src}
-                        alt={alt}
-                        className="w-full h-full object-cover"
-                        onError={() => setImgError(true)}
-                    />
-                ) : fallback ? (
-                    <span className="font-semibold text-(--color-muted) leading-none select-none">
-            {getInitials(fallback)}
-          </span>
-                ) : (
-                    // Generic person icon SVG fallback
-                    <svg
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="w-3/5 h-3/5 text-(--color-muted)"
-                    >
-                        <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
-                    </svg>
-                )}
+                <img
+                    src={finalSrc}
+                    alt={alt || fallback || 'Avatar'}
+                    className="w-full h-full object-cover"
+                    onError={() => setImgError(true)}
+                />
             </div>
         );
     }
