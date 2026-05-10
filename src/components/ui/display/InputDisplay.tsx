@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Card, Input } from '@/components/ui';
+import { DiscriminatorInput } from "@/components/ui/components/DescriminatorInput.tsx";
 
 export const InputDisplay = () => {
     const [inputValue, setInputValue] = useState('');
+    const [discriminator, setDiscriminator] = useState('');
 
     return (
         <section className="space-y-4">
@@ -50,6 +52,13 @@ export const InputDisplay = () => {
                                 label="Large"
                                 inputSize="lg"
                                 placeholder="Large input"
+                            />
+
+                            <DiscriminatorInput
+                                label="Discriminator"
+                                value={discriminator}
+                                onChange={setDiscriminator}
+                                helperText="4-digit number shown on your profile"
                             />
                         </div>
                     </div>

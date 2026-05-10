@@ -1,4 +1,4 @@
-import { forwardRef, type HTMLAttributes, useState, useMemo } from 'react';
+import { forwardRef, type HTMLAttributes, useState, useMemo, useEffect } from 'react';
 
 /**
  * Configuration: Change this string to update the global fallback style.
@@ -45,6 +45,10 @@ export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
     ) => {
         const [imgError, setImgError] = useState(false);
         const sizeClass = sizeStyles[size];
+
+        useEffect(() => {
+            setImgError(false);
+        }, [src]);
 
         const diceBearUrl = useMemo(() => {
             const seed = fallback || 'default';
