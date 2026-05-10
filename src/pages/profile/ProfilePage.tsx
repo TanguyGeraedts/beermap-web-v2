@@ -38,6 +38,12 @@ export const ProfilePage = () => {
                 >
                     Settings
                 </Button>
+                <Button variant="secondary"
+                        size="md"
+                        onClick={() => navigate('/profile/edit')}
+                >
+                    Edit Profile
+                </Button>
             </div>
         </main>
     );
