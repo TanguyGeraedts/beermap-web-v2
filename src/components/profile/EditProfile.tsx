@@ -59,11 +59,11 @@ export const EditProfile = () => {
         try {
             await updateProfile({
                 ...formData,
-                avatarUrl: formData.avatarUrl ?? null,
+                avatarUrl: formData.avatarUrl ?? '',
             });
-            setStatus({type: 'success', msg: 'Profile updated successfully!'});
+            setStatus({ type: 'success', msg: 'Profile updated successfully!' });
         } catch {
-            setStatus({type: 'error', msg: 'Failed to update profile. Please try again.'});
+            setStatus({ type: 'error', msg: 'Failed to update profile. Please try again.' });
         }
     };
 
