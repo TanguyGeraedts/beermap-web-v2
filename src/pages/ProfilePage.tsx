@@ -1,4 +1,4 @@
-import {Navigate} from 'react-router-dom';
+import {Navigate, useNavigate} from 'react-router-dom';
 import {useAuth} from '@/hooks/useAuth';
 import {useMe} from "@/hooks/useMe.ts";
 import ProfileHeader from "@/components/profile/ProfileHeader.tsx";
@@ -6,8 +6,10 @@ import {MeResponse} from "@/types";
 import {Button} from "@/components/ui";
 
 export const ProfilePage = () => {
-    const {isAuthenticated, logout} = useAuth();
+    const {isAuthenticated} = useAuth();
     const {profile, isLoading} = useMe();
+    const navigate = useNavigate();
+
     if (!isAuthenticated) {
         return <Navigate to="/login" replace/>;
     }
@@ -30,7 +32,12 @@ export const ProfilePage = () => {
                     <ProfileHeader profile={profile as MeResponse}/>
                 )}
 
-                <Button variant="danger" size="md"  onClick={logout}>Log out</Button>
+                <Button variant="secondary"
+                    size="md"
+                    onClick={() => navigate('/settings')}
+                >
+                    Settings
+                </Button>
             </div>
         </main>
     );
