@@ -14,17 +14,15 @@ interface FriendListItemProps {
 }
 
 export const FriendListItem = ({ item, tab, actions }: FriendListItemProps) => {
-    const user = item.user;
-    const targetUserId = user?.id || item.requesterId;
+    const friend = item.friend;
 
     const handleRemoveAction = async () => {
         try {
-            const targetId = item.user?.id
-                ? item.addresseeId
-                : item.requesterId;
+            const targetId = friend?.id;
+            if (!targetId) return;
 
-            if (tab === 'friends') await actions.remove(targetId);
-            if (tab === 'sent')    await actions.cancel(targetId);
+            if (tab === 'friends')  await actions.remove(targetId);
+            if (tab === 'sent')     await actions.cancel(targetId);
             if (tab === 'received') await actions.reject(targetId);
         } catch (error) {
             console.error("Action failed", error);
@@ -37,15 +35,15 @@ export const FriendListItem = ({ item, tab, actions }: FriendListItemProps) => {
                 <div className="flex items-center gap-3">
                     <Avatar
                         size="md"
-                        src={user?.avatarUrl || undefined}
-                        fallback={user?.username || "Guest"}
+                        src={friend?.avatarUrl ?? undefined}
+                        fallback={friend?.username ?? "?"}
                     />
                     <div>
                         <p className="font-bold text-(--color-text)">
-                            {user?.username || "Unknown User"}
+                            {friend?.username ?? "Unknown User"}
                         </p>
                         <p className="text-xs text-(--color-muted) font-mono">
-                            {user?.discriminator ? `#${user.discriminator}` : item.status}
+                            {friend?.discriminator ? `#${friend.discriminator}` : item.status}
                         </p>
                     </div>
                 </div>
@@ -54,7 +52,7 @@ export const FriendListItem = ({ item, tab, actions }: FriendListItemProps) => {
                     {tab === 'received' && (
                         <Button
                             size="sm"
-                            onClick={() => actions.accept({ userId: targetUserId })}
+                            onClick={() => friend?.id && actions.accept({ userId: friend.id })}
                         >
                             Accept
                         </Button>

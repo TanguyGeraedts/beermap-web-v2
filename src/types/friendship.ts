@@ -1,6 +1,11 @@
-import { MeResponse } from "./auth";
+export type FriendshipStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED' | 'REMOVED' | 'BLOCKED';
 
-export type FriendshipStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED';
+export interface FriendSummary {
+    id: string;
+    username: string;
+    discriminator: string;
+    avatarUrl?: string;
+}
 
 export interface Friendship {
     id: string;
@@ -8,7 +13,7 @@ export interface Friendship {
     addresseeId: string;
     status: FriendshipStatus;
     createdAt: string;
-    user?: MeResponse;
+    friend?: FriendSummary; 
 }
 
 export interface SendFriendRequest {
