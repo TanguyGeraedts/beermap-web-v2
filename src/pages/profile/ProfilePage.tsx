@@ -44,6 +44,12 @@ export const ProfilePage = () => {
                 >
                     Edit Profile
                 </Button>
+                <Button variant="secondary"
+                        size="md"
+                        onClick={() => navigate('/profile/stats')}
+                >
+                    Stats
+                </Button>
             </div>
         </main>
     );

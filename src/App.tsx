@@ -8,6 +8,7 @@ import {ProfilePage} from "@/pages/profile/ProfilePage.tsx";
 import {EditProfilePage} from "@/pages/profile/EditProfilePage.tsx";
 import {LoginPage} from "@/pages/auth/LoginPage.tsx";
 import {UIComponentsPage} from "@/pages/dev/UIComponentsPage.tsx";
+import {StatsPage} from "@/pages/profile/StatsPage.tsx";
 
 const App = () => {
     return (
@@ -30,6 +31,7 @@ const App = () => {
                     {/* SUB PAGES: */}
                     <Route path="/settings" element={<SettingsPage />} />
                     <Route path="/profile/edit" element={<EditProfilePage/>}/>
+                    <Route path="/profile/stats" element={<StatsPage/>}/>
 
                     {/* DEV PAGES: */}
                     <Route path="/ui-components" element={<UIComponentsPage />} />

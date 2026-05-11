@@ -8,7 +8,7 @@ import {
     InputDisplay,
     SkeletonDisplay,
     UserRankPillDisplay,
-    Button
+    Button, SegmentedControlDisplay
 } from "@/components/ui";
 
 export const UIComponentsPage = () => {
@@ -43,6 +43,7 @@ export const UIComponentsPage = () => {
                     <CardDisplay />
                     <AvatarDisplay/>
                     <UserRankPillDisplay/>
+                    <SegmentedControlDisplay/>
                     <InputDisplay />
                     <BadgeDisplay />
                     <AlertDisplay />

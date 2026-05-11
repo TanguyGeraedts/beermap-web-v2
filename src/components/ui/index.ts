@@ -7,6 +7,7 @@ export { Alert } from './components/Alert';
 export { Avatar } from './components/Avatar';
 export { Skeleton } from './components/Skeleton';
 export { UserRankPill } from './components/UserRankPill';
+export { SegmentedControl } from './components/SegmentedControl';
 
 // Display
 export { ButtonDisplay } from './display/ButtonDisplay';
@@ -17,3 +18,4 @@ export { AlertDisplay } from './display/AlertDisplay';
 export { AvatarDisplay } from './display/AvatarDisplay';
 export { SkeletonDisplay } from './display/SkeletonDisplay';
 export { UserRankPillDisplay } from './display/UserRankPillDisplay';
+export { SegmentedControlDisplay } from './display/SegmentedControlDisplay';
