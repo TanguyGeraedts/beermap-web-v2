@@ -33,22 +33,31 @@ export const ProfilePage = () => {
                 )}
 
                 <Button variant="secondary"
-                    size="md"
-                    onClick={() => navigate('/settings')}
+                        size="md"
+                        onClick={() => navigate('/profile/stats')}
                 >
-                    Settings
+                    Stats
                 </Button>
+
                 <Button variant="secondary"
                         size="md"
                         onClick={() => navigate('/profile/edit')}
                 >
                     Edit Profile
                 </Button>
+
                 <Button variant="secondary"
                         size="md"
-                        onClick={() => navigate('/profile/stats')}
+                        onClick={() => navigate('/profile/friends')}
                 >
-                    Stats
+                    Friends
+                </Button>
+
+                <Button variant="secondary"
+                        size="md"
+                        onClick={() => navigate('/settings')}
+                >
+                    Settings
                 </Button>
             </div>
         </main>

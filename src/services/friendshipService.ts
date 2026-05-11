@@ -1,5 +1,5 @@
-import {apiClient} from '@/services/apiClient';
-import type {AcceptFriendRequest, Friendship, SendFriendRequest} from '@/types/friendship';
+import { apiClient } from '@/services/apiClient';
+import type { AcceptFriendRequest, Friendship, SendFriendRequest } from '@/types/friendship';
 
 export const friendshipService = {
     getFriends: async () => {
@@ -27,18 +27,18 @@ export const friendshipService = {
         return data;
     },
 
-    rejectRequest: async (friendshipId: string) => {
-        const { data } = await apiClient.post(`/friendships/${friendshipId}/reject`);
+    rejectRequest: async (userId: string) => {
+        const { data } = await apiClient.post('/friendships/reject', { userId });
         return data;
     },
 
-    cancelRequest: async (friendshipId: string) => {
-        const { data } = await apiClient.post(`/friendships/${friendshipId}/cancel`);
+    cancelRequest: async (userId: string) => {
+        const { data } = await apiClient.post('/friendships/cancel', { userId });
         return data;
     },
 
-    removeFriend: async (friendshipId: string) => {
-        const { data } = await apiClient.post(`/friendships/${friendshipId}/remove`);
+    removeFriend: async (userId: string) => {
+        const { data } = await apiClient.post('/friendships/remove', { userId });
         return data;
-    }
+    },
 };

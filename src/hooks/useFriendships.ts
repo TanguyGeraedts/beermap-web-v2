@@ -19,36 +19,44 @@ export const useFriendships = () => {
         queryFn: friendshipService.getReceivedRequests,
     });
 
-    // Mutations
+    const invalidate = () => queryClient.invalidateQueries({ queryKey: ['friendships'] });
+
     const sendRequest = useMutation({
         mutationFn: friendshipService.sendRequest,
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['friendships', 'sent'] }),
+        onSuccess: invalidate,
     });
 
     const acceptRequest = useMutation({
         mutationFn: friendshipService.acceptRequest,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['friendships'] });
-        },
+        onSuccess: invalidate,
+    });
+
+    const rejectRequest = useMutation({
+        mutationFn: friendshipService.rejectRequest,
+        onSuccess: invalidate,
+    });
+
+    const cancelRequest = useMutation({
+        mutationFn: friendshipService.cancelRequest,
+        onSuccess: invalidate,
     });
 
     const removeFriend = useMutation({
         mutationFn: friendshipService.removeFriend,
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['friendships', 'list'] }),
+        onSuccess: invalidate,
     });
 
     return {
-        // Data
         friends: friends.data ?? [],
         sent: sentRequests.data ?? [],
         received: receivedRequests.data ?? [],
-        // States
         isLoading: friends.isLoading || receivedRequests.isLoading || sentRequests.isLoading,
-        // Actions
         actions: {
             send: sendRequest.mutateAsync,
             accept: acceptRequest.mutateAsync,
-            remove: removeFriend.mutateAsync,
+            reject: rejectRequest.mutateAsync,  // For incoming
+            cancel: cancelRequest.mutateAsync,  // For outgoing
+            remove: removeFriend.mutateAsync,   // For accepted friends
         }
     };
 };
