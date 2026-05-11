@@ -1,12 +1,14 @@
-import {useNavigate} from 'react-router-dom';
-import {useAuth} from '@/hooks/useAuth';
-import {useIsAdmin} from '@/hooks/useIsAdmin';
-import {Button, Card} from "@/components/ui";
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { useIsAdmin } from '@/hooks/useIsAdmin';
+import { useTheme } from '@/hooks/useTheme';
+import { Button, Card } from '@/components/ui';
 
 export const SettingsPage = () => {
     const navigate = useNavigate();
     const { logout } = useAuth();
     const { isAdmin } = useIsAdmin();
+    const { isDark, toggle } = useTheme();
 
     const handleLogout = async () => {
         await logout();
@@ -41,7 +43,38 @@ export const SettingsPage = () => {
                 </section>
             )}
 
-            {/* Application Section */}
+            {/* Appearance */}
+            <section className="space-y-2">
+                <h2 className="text-xs font-bold uppercase text-(--color-muted) px-1">
+                    Appearance
+                </h2>
+                <Card variant="default">
+                    <Card.Body>
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="font-medium text-(--color-text)">Dark Mode</p>
+                                <p className="text-xs text-(--color-muted)">
+                                    {isDark ? 'Dark theme enabled' : 'Light theme enabled'}
+                                </p>
+                            </div>
+                            <button
+                                onClick={toggle}
+                                className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-200 focus:outline-none ${
+                                    isDark ? 'bg-(--color-primary)' : 'bg-(--color-border)'
+                                }`}
+                            >
+                                <span className={`inline-flex h-5 w-5 items-center justify-center rounded-full bg-white shadow transition-transform duration-200 ${
+                                    isDark ? 'translate-x-6' : 'translate-x-1'
+                                }`}>
+                                    {isDark ? '🌙' : '☀️'}
+                                </span>
+                            </button>
+                        </div>
+                    </Card.Body>
+                </Card>
+            </section>
+
+            {/* Application */}
             <section className="space-y-2">
                 <h2 className="text-xs font-bold uppercase text-(--color-muted) px-1">
                     Application
@@ -50,12 +83,10 @@ export const SettingsPage = () => {
                     <Card.Body className="flex flex-col gap-2">
                         <Button variant="secondary" className="justify-start">Privacy</Button>
                         <Button variant="secondary" className="justify-start">Notifications</Button>
-                        <Button variant="secondary" className="justify-start">Appearance</Button>
                     </Card.Body>
                 </Card>
             </section>
 
-            {/* Logout */}
             <Button variant="danger" className="w-full" onClick={handleLogout}>
                 Sign Out
             </Button>
