@@ -9,6 +9,7 @@ import {EditProfilePage} from "@/pages/profile/EditProfilePage.tsx";
 import {LoginPage} from "@/pages/auth/LoginPage.tsx";
 import {UIComponentsPage} from "@/pages/dev/UIComponentsPage.tsx";
 import {StatsPage} from "@/pages/profile/StatsPage.tsx";
+import {FriendsPage} from "@/pages/friendship/FriendsPage.tsx";
 
 const App = () => {
     return (
@@ -32,6 +33,7 @@ const App = () => {
                     <Route path="/settings" element={<SettingsPage />} />
                     <Route path="/profile/edit" element={<EditProfilePage/>}/>
                     <Route path="/profile/stats" element={<StatsPage/>}/>
+                    <Route path="/profile/friends" element={<FriendsPage/>}/>
 
                     {/* DEV PAGES: */}
                     <Route path="/ui-components" element={<UIComponentsPage />} />

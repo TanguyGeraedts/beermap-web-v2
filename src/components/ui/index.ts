@@ -8,6 +8,7 @@ export { Avatar } from './components/Avatar';
 export { Skeleton } from './components/Skeleton';
 export { UserRankPill } from './components/UserRankPill';
 export { SegmentedControl } from './components/SegmentedControl';
+export { DiscriminatorInput } from './components/DescriminatorInput';
 
 // Display
 export { ButtonDisplay } from './display/ButtonDisplay';
