@@ -1,4 +1,4 @@
-import { Beer, Martini, Wine,  Droplet, type LucideIcon } from 'lucide-react';
+import {Beer, Droplet, GlassWater, type LucideIcon, Martini, Wine} from 'lucide-react';
 
 export type DrinkCategory = 'BEER' | 'COCKTAIL' | 'WINE' | 'SPIRITS' | 'OTHER';
 
@@ -24,7 +24,7 @@ export const drinkCategoryConfig: Record<DrinkCategory, {
     },
     SPIRITS: {
         label: 'Spirits',
-        icon: Droplet,
+        icon: GlassWater,
         color: 'text-orange-600'
     },
     OTHER: {
