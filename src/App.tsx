@@ -10,6 +10,7 @@ import {LoginPage} from "@/pages/auth/LoginPage.tsx";
 import {UIComponentsPage} from "@/pages/dev/UIComponentsPage.tsx";
 import {StatsPage} from "@/pages/profile/StatsPage.tsx";
 import {FriendsPage} from "@/pages/friendship/FriendsPage.tsx";
+import {MapPage} from "@/pages/map/MapPage.tsx";
 
 const App = () => {
     return (
@@ -25,7 +26,7 @@ const App = () => {
                     {/* MAIN PAGES: */}
                     <Route path="/journal" element={<PlaceholderPage title="Journal" />} />
                     <Route path="/feed" element={<PlaceholderPage title="Feed" />} />
-                    <Route path="/" element={<PlaceholderPage title="Map" />} />
+                    <Route path="/" element={<MapPage/>} />
                     <Route path="/sessions" element={<PlaceholderPage title="Session" />} />
                     <Route path="/profile" element={<ProfilePage />} />
 
