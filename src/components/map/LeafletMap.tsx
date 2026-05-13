@@ -1,12 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, forwardRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { DrinkLogPin } from '@/types/map';
 import { createDrinkPin, createClusterPin } from './DrinkPin';
 
-// ---------------------------------------------------------------------------
-// Clustering
-// ---------------------------------------------------------------------------
 interface ClusteredPin {
     pins: DrinkLogPin[];
     lat: number;
@@ -30,16 +27,15 @@ function clusterPins(pins: DrinkLogPin[], zoom: number): ClusteredPin[] {
     }));
 }
 
-// ---------------------------------------------------------------------------
-// Popup HTML
-// ---------------------------------------------------------------------------
 function buildPopup(pins: DrinkLogPin[]): string {
     if (pins.length === 1) {
         const p = pins[0];
         const date = new Date(p.consumedAt).toLocaleDateString(undefined, {
             day: 'numeric', month: 'short', year: 'numeric',
         });
-        const stars = p.rating ? '★'.repeat(p.rating) + '☆'.repeat(5 - p.rating) : null;
+        const stars = p.rating != null
+            ? '★'.repeat(Math.round(p.rating / 2)) + '☆'.repeat(Math.max(0, 5 - Math.round(p.rating / 2)))
+            : null;
         return `
             <div style="min-width:140px;max-width:200px">
                 <strong style="font-size:0.875rem;display:block;margin-bottom:2px">${p.displayName}</strong>
@@ -63,9 +59,6 @@ function buildPopup(pins: DrinkLogPin[]): string {
     `;
 }
 
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
 interface LeafletMapProps {
     center?: [number, number];
     zoom?: number;
@@ -73,73 +66,94 @@ interface LeafletMapProps {
     className?: string;
 }
 
-export const LeafletMap = ({
-                               center = [50.8503, 4.3517],
-                               zoom = 13,
-                               pins = [],
-                               className = '',
-                           }: LeafletMapProps) => {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const mapRef = useRef<L.Map | null>(null);
-    const markersRef = useRef<L.Marker[]>([]);
-    // Keep a stable ref to pins so the zoomend handler always sees the latest value
-    const pinsRef = useRef<DrinkLogPin[]>(pins);
+export interface LeafletMapHandle {
+    centerOnLocation: () => void;
+}
 
-    const renderMarkers = (map: L.Map, allPins: DrinkLogPin[], currentZoom: number) => {
-        markersRef.current.forEach((m) => m.remove());
-        markersRef.current = [];
+export const LeafletMap = forwardRef<LeafletMapHandle, LeafletMapProps>(
+    ({
+         center = [50.8503, 4.3517],
+         zoom = 13,
+         pins = [],
+         className = '',
+     }, ref) => {
+        const containerRef = useRef<HTMLDivElement>(null);
+        const mapRef = useRef<L.Map | null>(null);
+        const markersRef = useRef<L.Marker[]>([]);
+        const pinsRef = useRef<DrinkLogPin[]>(pins);
 
-        for (const cluster of clusterPins(allPins, currentZoom)) {
-            const isSingle = cluster.pins.length === 1;
-            const dominant = cluster.pins[0].category;
-            const icon = isSingle
-                ? createDrinkPin(dominant)
-                : createClusterPin(cluster.pins.length, dominant);
+        const renderMarkers = (map: L.Map, allPins: DrinkLogPin[], currentZoom: number) => {
+            markersRef.current.forEach((m) => m.remove());
+            markersRef.current = [];
 
-            const marker = L.marker([cluster.lat, cluster.lng], { icon });
-            marker.bindPopup(buildPopup(cluster.pins), { maxWidth: 220 });
-            marker.addTo(map);
-            markersRef.current.push(marker);
-        }
-    };
+            for (const cluster of clusterPins(allPins, currentZoom)) {
+                const isSingle = cluster.pins.length === 1;
+                const dominant = cluster.pins[0].category;
+                const icon = isSingle
+                    ? createDrinkPin(dominant)
+                    : createClusterPin(cluster.pins.length, dominant);
 
-    // Initialise map once
-    useEffect(() => {
-        if (!containerRef.current || mapRef.current) return;
-
-        const map = L.map(containerRef.current, { center, zoom, zoomControl: false });
-
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
-        L.control.zoom({ position: 'bottomright' }).addTo(map);
-
-        // Use pinsRef so handler always reads the latest pins without needing a re-register
-        map.on('zoomend', () => {
-            renderMarkers(map, pinsRef.current, map.getZoom());
-        });
-
-        mapRef.current = map;
-
-        return () => {
-            map.remove();
-            mapRef.current = null;
+                const marker = L.marker([cluster.lat, cluster.lng], { icon });
+                marker.bindPopup(buildPopup(cluster.pins), { maxWidth: 220 });
+                marker.addTo(map);
+                markersRef.current.push(marker);
+            }
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
-    // Sync pins whenever they change
-    useEffect(() => {
-        pinsRef.current = pins;
-        const map = mapRef.current;
-        if (!map) return;
-        renderMarkers(map, pins, map.getZoom());
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pins]);
+        // Expose centerOnLocation method via ref
+        useEffect(() => {
+            if (ref && typeof ref === 'object' && 'current' in ref) {
+                ref.current = {
+                    centerOnLocation: () => {
+                        if (navigator.geolocation && mapRef.current) {
+                            navigator.geolocation.getCurrentPosition((pos) => {
+                                const { latitude, longitude } = pos.coords;
+                                mapRef.current?.setView([latitude, longitude], mapRef.current.getZoom());
+                            });
+                        }
+                    },
+                };
+            }
+        }, [ref]);
 
-    return (
-        <div
-            ref={containerRef}
-            id="map-element"
-            className={`map-container w-full h-full ${className}`}
-        />
-    );
-};
+        // Initialise map once
+        useEffect(() => {
+            if (!containerRef.current || mapRef.current) return;
+
+            const map = L.map(containerRef.current, { center, zoom, zoomControl: false });
+
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+
+            map.on('zoomend', () => {
+                renderMarkers(map, pinsRef.current, map.getZoom());
+            });
+
+            mapRef.current = map;
+
+            return () => {
+                map.remove();
+                mapRef.current = null;
+            };
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, []);
+
+        // Sync pins whenever they change
+        useEffect(() => {
+            pinsRef.current = pins;
+            const map = mapRef.current;
+            if (!map) return;
+            renderMarkers(map, pins, map.getZoom());
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [pins]);
+
+        return (
+            <div
+                ref={containerRef}
+                id="map-element"
+                className={`map-container w-full h-full ${className}`}
+            />
+        );
+    }
+);
+
+LeafletMap.displayName = 'LeafletMap';

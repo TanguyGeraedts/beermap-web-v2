@@ -1,37 +1,41 @@
-import {NavLink} from 'react-router-dom';
-import {Activity, BookOpen, MapIcon, Rss, User} from 'lucide-react';
-import {cn} from "@/utils/cn.ts";
-
-const navItems = [
-    { label: 'Journal', to: '/journal', icon: BookOpen },
-    { label: 'Feed', to: '/feed', icon: Rss },
-    { label: 'Map', to: '/', icon: MapIcon },
-    { label: 'Sessions', to: '/sessions', icon: Activity },
-    { label: 'Profile', to: '/profile', icon: User },
-];
+import { NavLink, useLocation } from 'react-router-dom';
+import { cn } from "@/utils/cn.ts";
+import {NAV_CONFIG} from "@/types";
 
 export const BottomNavbar = () => {
+    const { pathname } = useLocation();
+
     return (
-        <nav
-            className="fixed bottom-0 left-0 right-0 z-50 bg-(--color-surface)/80 backdrop-blur-md border-t border-(--color-border) pb-(env(safe-area-inset-bottom))">
-            <div className="flex items-center justify-around h-16 max-w-md mx-auto">
-                {navItems.map((item) => {
+        <nav className="fixed bottom-0 left-0 right-0 z-50 bg-(--color-surface)/80 backdrop-blur-lg border-t border-(--color-border) pb-(env(safe-area-inset-bottom))">
+            <div className="flex items-center justify-around h-16 max-w-md mx-auto px-2">
+                {NAV_CONFIG.map((item) => {
                     const Icon = item.icon;
+
+                    const isRootMatch = item.root === '/'
+                        ? pathname === '/'
+                        : pathname.startsWith(item.root);
+
+                    const isSubPathMatch = item.subPaths.some(path => pathname.startsWith(path));
+
+                    const isActive = isRootMatch || isSubPathMatch;
+
                     return (
                         <NavLink
-                            key={item.to}
-                            to={item.to}
-                            className={({isActive}) => cn(
-                                "flex flex-col items-center justify-center w-full h-full gap-1 transition-colors",
-                                isActive
-                                    ? "text-(--color-primary)"
-                                    : "text-(--color-muted) hover:text-(--color-text)"
+                            key={item.root}
+                            to={item.root}
+                            className={cn(
+                                "relative flex flex-col items-center justify-center w-full h-full gap-1 transition-all",
+                                isActive ? "text-(--color-primary)" : "text-(--color-muted)"
                             )}
                         >
-                            <Icon size={20} strokeWidth={2.25}/>
-                            <span className="text-[10px] font-medium uppercase tracking-wider">
+                            <Icon size={22} strokeWidth={isActive ? 2.5 : 2} />
+                            <span className="text-[10px] font-bold uppercase tracking-tight">
                                 {item.label}
                             </span>
+
+                            {isActive && (
+                                <div className="absolute top-0 w-8 h-1 rounded-b-full bg-(--color-primary)" />
+                            )}
                         </NavLink>
                     );
                 })}

@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Globe, Users, Lock, RefreshCw, AlertCircle } from 'lucide-react';
-import { LeafletMap } from '@/components/map/LeafletMap';
+import { LeafletMap, type LeafletMapHandle } from '@/components/map/LeafletMap';
 import { useMapPins } from '@/hooks/useMapPins';
 import type { MapPinFilter } from '@/types/map';
+import {LogDrinkButton} from "@/components/map/LogdrinkButton.tsx";
+import {useNavigate} from "react-router-dom";
+import {LocationButton} from "@/components/map/Locationbutton.tsx";
 
 const FILTERS: { id: MapPinFilter; label: string; icon: typeof Globe }[] = [
     { id: 'all',     label: 'All',     icon: Globe  },
@@ -13,12 +16,27 @@ const FILTERS: { id: MapPinFilter; label: string; icon: typeof Globe }[] = [
 export const MapPage = () => {
     const { data: pins = [], isLoading, error, refetch } = useMapPins();
     const [activeFilter, setActiveFilter] = useState<MapPinFilter>('all');
+    const mapRef = useRef<LeafletMapHandle>(null);
 
+    const navigate = useNavigate();
     const visiblePins = pins;
+
+    const handleLogDrink = () => {
+        navigate("/log")
+    };
+
+    const handleSnapDrink = () => {
+        navigate("/snap")
+    };
+
+    const handleCenterLocation = () => {
+        mapRef.current?.centerOnLocation();
+    };
 
     return (
         <div className="fixed inset-0 z-0">
             <LeafletMap
+                ref={mapRef}
                 center={[50.8503, 4.3517]}
                 zoom={14}
                 pins={visiblePins}
@@ -89,6 +107,19 @@ export const MapPage = () => {
                         );
                     })}
                 </div>
+            </div>
+
+            {/* Log Drink Button*/}
+            <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-500 pointer-events-auto">
+                <LogDrinkButton
+                    onLog={handleLogDrink}
+                    onSnap={handleSnapDrink}
+                />
+            </div>
+
+            {/* Location Button */}
+            <div className="absolute bottom-24 right-4 z-500 pointer-events-auto">
+                <LocationButton onClick={handleCenterLocation} />
             </div>
         </div>
     );

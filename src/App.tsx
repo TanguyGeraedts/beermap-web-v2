@@ -36,6 +36,9 @@ const App = () => {
                     <Route path="/profile/edit" element={<EditProfilePage/>}/>
                     <Route path="/profile/stats" element={<StatsPage/>}/>
                     <Route path="/profile/friends" element={<FriendsPage/>}/>
+                    <Route path="/log" element={<PlaceholderPage title={"log"}/>}/>
+                    <Route path="/snap" element={<PlaceholderPage title={"snap"}/>}/>
+
 
                     {/* DEV PAGES: */}
                     <Route path="/ui-components" element={<UIComponentsPage />} />

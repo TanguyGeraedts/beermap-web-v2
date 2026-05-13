@@ -5,3 +5,4 @@ export * from './feed';
 export * from './friendship';
 export * from './map';
 export * from './visibility';
+export * from './navConfig';
