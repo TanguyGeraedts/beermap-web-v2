@@ -1,35 +1,74 @@
 import { useState } from 'react';
 import { useLogDrink } from '@/hooks/useDrinkLog';
-import { DrinkCatalogItemResponse } from '@/types';
-import {Alert, Button} from "@/components/ui";
-import {DrinkSearchInput} from "@/components/log/DrinkSearchInput.tsx";
+import { DrinkCatalogItemResponse, LogDrinkRequest } from '@/types';
+import { DrinkSearchInput } from '@/components/log/DrinkSearchInput';
+import { DrinkDetailsForm } from '@/components/log/DrinkDetailsForm';
+import {Alert} from "@/components/ui";
 
+type Step = 'search' | 'details';
 
 export const LogDrinkPage = () => {
+    const [step, setStep] = useState<Step>('search');
     const [selectedItem, setSelectedItem] = useState<DrinkCatalogItemResponse | null>(null);
+    const [customName, setCustomName] = useState('');
     const [successMsg, setSuccessMsg] = useState<string | null>(null);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
     const { mutate: logDrink, isPending } = useLogDrink();
 
-    const handleLog = () => {
-        if (!selectedItem) return;
-
-        logDrink(
-            { catalogItemId: selectedItem.id },
-            {
-                onSuccess: () => {
-                    setSuccessMsg(`${selectedItem.name} logged!`);
-                    setSelectedItem(null);
-                    setErrorMsg(null);
-                },
-                onError: () => {
-                    setErrorMsg('Something went wrong. Please try again.');
-                    setSuccessMsg(null);
-                },
-            }
-        );
+    const handleSelectFromCatalog = (item: DrinkCatalogItemResponse | null) => {
+        if (item) {
+            setSelectedItem(item);
+            setCustomName('');
+            setStep('details');
+        }
     };
+
+    const handleCustom = (name?: string) => {
+        setSelectedItem(null);
+        setCustomName(name ?? '');
+        setStep('details');
+    };
+
+    const handleBack = () => {
+        setStep('search');
+    };
+
+    const handleSubmit = (payload: LogDrinkRequest) => {
+        logDrink(payload, {
+            onSuccess: () => {
+                const name = selectedItem?.name ?? customName ?? 'Drink';
+                setSuccessMsg(`${name} logged!`);
+                setSelectedItem(null);
+                setCustomName('');
+                setStep('search');
+                setErrorMsg(null);
+            },
+            onError: () => {
+                setErrorMsg('Something went wrong. Please try again.');
+                setSuccessMsg(null);
+            },
+        });
+    };
+
+    if (step === 'details') {
+        return (
+            <>
+                {errorMsg && (
+                    <div className="px-4 pt-4">
+                        <Alert variant="error" onClose={() => setErrorMsg(null)}>{errorMsg}</Alert>
+                    </div>
+                )}
+                <DrinkDetailsForm
+                    catalogItem={selectedItem}
+                    customName={customName}
+                    onBack={handleBack}
+                    onSubmit={handleSubmit}
+                    isSubmitting={isPending}
+                />
+            </>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-(--color-background) flex flex-col">
@@ -46,30 +85,12 @@ export const LogDrinkPage = () => {
                         {successMsg}
                     </Alert>
                 )}
-                {errorMsg && (
-                    <Alert variant="error" onClose={() => setErrorMsg(null)}>
-                        {errorMsg}
-                    </Alert>
-                )}
 
                 <DrinkSearchInput
-                    onSelect={setSelectedItem}
+                    onSelect={handleSelectFromCatalog}
+                    onCustom={() => handleCustom()}
                     selectedItem={selectedItem}
                 />
-            </div>
-
-            {/* Footer CTA */}
-            <div className="px-6 py-6">
-                <Button
-                    variant="primary"
-                    size="lg"
-                    className="w-full rounded-2xl"
-                    disabled={!selectedItem}
-                    isLoading={isPending}
-                    onClick={handleLog}
-                >
-                    Log drink
-                </Button>
             </div>
         </div>
     );

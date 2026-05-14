@@ -1,15 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
-import { Search } from 'lucide-react';
+import { Search, Plus } from 'lucide-react';
 import { useDrinkCatalogSearchByName } from '@/hooks/useDrinkCatalog';
 import { DrinkCatalogItemResponse, DrinkCategory, drinkCategoryConfig } from '@/types';
 
 interface DrinkSearchInputProps {
     onSelect: (item: DrinkCatalogItemResponse | null) => void;
+    onCustom: (name?: string) => void;
     selectedItem: DrinkCatalogItemResponse | null;
 }
 
-export const DrinkSearchInput = ({ onSelect }: DrinkSearchInputProps) => {
-    const [query, setQuery] = useState('');
+export const DrinkSearchInput = ({ onSelect, onCustom, selectedItem }: DrinkSearchInputProps) => {
+    const [query, setQuery] = useState(selectedItem?.name ?? '');
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -41,7 +42,7 @@ export const DrinkSearchInput = ({ onSelect }: DrinkSearchInputProps) => {
         }
     };
 
-    const showDropdown = isOpen && results.length > 0;
+    const showDropdown = isOpen && (results.length > 0 || (query.length > 0 && !isLoading));
 
     return (
         <div className="flex flex-col gap-1.5" ref={containerRef}>
@@ -81,7 +82,7 @@ export const DrinkSearchInput = ({ onSelect }: DrinkSearchInputProps) => {
                     rounded-2xl overflow-hidden
                     shadow-lg
                 ">
-                    {results.map((item, index) => {
+                    {results.map((item,) => {
                         const config = drinkCategoryConfig[item.category as DrinkCategory];
                         const Icon = config?.icon;
                         const color = config?.color ?? 'text-slate-600';
@@ -99,7 +100,7 @@ export const DrinkSearchInput = ({ onSelect }: DrinkSearchInputProps) => {
                                     w-full flex items-center gap-4 px-4 py-3 text-left
                                     hover:bg-(--color-surface-muted) transition-colors duration-100
                                     cursor-pointer
-                                    ${index < results.length - 1 ? 'border-b border-(--color-border)' : ''}
+                                    border-b border-(--color-border)
                                 `}
                             >
                                 <div className={`
@@ -124,6 +125,29 @@ export const DrinkSearchInput = ({ onSelect }: DrinkSearchInputProps) => {
                             </button>
                         );
                     })}
+
+                    {/* Can't find it row */}
+                    <button
+                        onClick={() => { setIsOpen(false); onCustom(query || undefined); }}
+                        className="
+                            w-full flex items-center gap-3 px-4 py-3 text-left
+                            hover:bg-(--color-surface-muted) transition-colors duration-100
+                            cursor-pointer
+                        "
+                    >
+                        <div className="
+                            flex items-center justify-center w-8 h-8
+                            bg-(--color-ring-soft) rounded-xl shrink-0
+                        ">
+                            <Plus size={14} className="text-(--color-primary)" />
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-sm font-semibold text-(--color-primary)">
+                                {query.length > 0 ? `Add "${query}" as custom drink` : "Can't find it? Add custom drink"}
+                            </span>
+                            <span className="text-xs text-(--color-muted)">Log it manually</span>
+                        </div>
+                    </button>
                 </div>
             )}
 
