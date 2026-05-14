@@ -1,7 +1,7 @@
 import { apiClient } from '@/services/apiClient';
+import { imageService } from './imageService';
 import type {
   CreateProfileRequest,
-  CreateUploadUrlResponse,
   MeApiResponse,
   MeResponse,
   UpdateProfileRequest
@@ -23,20 +23,5 @@ export const profileService = {
     return data;
   },
 
-  uploadProfileImage: async (file: File) => {
-    const { data } = await apiClient.post<CreateUploadUrlResponse>(
-      '/images/presign/profile-picture',
-      { contentType: file.type }
-    );
-
-    await fetch(data.uploadUrl, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': file.type
-      },
-      body: file
-    });
-
-    return data.publicUrl;
-  }
+  uploadProfileImage: (file: File) => imageService.uploadProfileImage(file)
 };

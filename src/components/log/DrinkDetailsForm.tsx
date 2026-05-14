@@ -5,6 +5,7 @@ import { Button, Rating } from '@/components/ui';
 import { VOLUME_PRESETS, DEFAULT_VOLUMES, getSubtypeSuggestions } from '@/config/drinkConfig';
 import { DrinkMoreDetails } from './DrinkMoreDetails';
 import { DrinkPhotoUpload } from './DrinkPhotoUpload';
+import { imageService } from '@/services/imageService';
 
 interface DrinkDetailsFormProps {
     catalogItem: DrinkCatalogItemResponse | null;
@@ -23,7 +24,6 @@ export const DrinkDetailsForm = ({
                                  }: DrinkDetailsFormProps) => {
     const isCatalog = !!catalogItem;
     const lockedCategory = isCatalog ? (catalogItem!.category as DrinkCategory) : null;
-
     const [category, setCategory] = useState<DrinkCategory>(lockedCategory ?? 'BEER');
     const [drinkName, setDrinkName] = useState(customName);
     const [subType, setSubType] = useState(catalogItem?.subType ?? '');
@@ -31,12 +31,11 @@ export const DrinkDetailsForm = ({
     const [quantity, setQuantity] = useState(1);
     const [rating, setRating] = useState(0);
     const [notes, setNotes] = useState('');
-    const [photos, setPhotos] = useState<string[]>([]);
+    const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+    const [isUploading, setIsUploading] = useState(false);
     const [moreOpen, setMoreOpen] = useState(false);
-
     const activeCategory = lockedCategory ?? category;
     const [volume, setVolume] = useState(() => DEFAULT_VOLUMES[activeCategory]);
-
     const subtypeSuggestions = getSubtypeSuggestions(activeCategory);
     const selectedVolumeLabel = VOLUME_PRESETS[activeCategory].find(p => p.ml === volume)?.label ?? `${volume}ml`;
 
@@ -44,6 +43,21 @@ export const DrinkDetailsForm = ({
         setCategory(cat);
         setSubType('');
         setVolume(DEFAULT_VOLUMES[cat]);
+    };
+
+    const handleFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        try {
+            setIsUploading(true);
+            const uploadedUrl = await imageService.uploadDrinkLogImage(file);
+            setPhotoUrl(uploadedUrl);
+        } catch (error) {
+            console.error("Upload failed", error);
+        } finally {
+            setIsUploading(false);
+        }
     };
 
     const handleSubmit = () => {
@@ -58,7 +72,7 @@ export const DrinkDetailsForm = ({
             rating: rating > 0 ? rating : undefined,
             description: notes || undefined,
             consumedAt: new Date().toISOString(),
-            // photoUrl would be handled here after upload logic
+            photoUrl: photoUrl || undefined,
         };
         onSubmit(payload);
     };
@@ -147,8 +161,13 @@ export const DrinkDetailsForm = ({
                     </div>
                 </div>
 
-                {/* ── Extracted Photo Component ── */}
-                <DrinkPhotoUpload photos={photos} setPhotos={setPhotos} />
+                {/* ── Photo Upload Component ── */}
+                <DrinkPhotoUpload
+                    photoUrl={photoUrl}
+                    isUploading={isUploading}
+                    onFileSelected={handleFileSelected}
+                    onRemove={() => setPhotoUrl(null)}
+                />
 
                 <div className="flex flex-col gap-1.5">
                     <label className="text-sm font-medium">Notes</label>
