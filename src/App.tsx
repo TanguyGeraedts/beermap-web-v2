@@ -1,7 +1,7 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
-import { AppProviders } from './providers/AppProviders';
-import { AppLayout } from "@/layout/AppLayout.tsx";
-import { PlaceholderPage } from "@/pages/PlaceholderPage.tsx";
+import {Navigate, Route, Routes} from 'react-router-dom';
+import {AppProviders} from './providers/AppProviders';
+import {AppLayout} from "@/layout/AppLayout.tsx";
+import {PlaceholderPage} from "@/pages/PlaceholderPage.tsx";
 import {SettingsPage} from "@/pages/settings/SettingsPage.tsx";
 import {CreateProfilePage} from "@/pages/profile/CreateProfilePage.tsx";
 import {ProfilePage} from "@/pages/profile/ProfilePage.tsx";
@@ -12,6 +12,7 @@ import {StatsPage} from "@/pages/profile/StatsPage.tsx";
 import {FriendsPage} from "@/pages/friendship/FriendsPage.tsx";
 import {MapPage} from "@/pages/map/MapPage.tsx";
 import {FeedPage} from "@/pages/feed/FeedPage.tsx";
+import {LogDrinkPage} from "@/pages/log/LogDrinkPage.tsx";
 
 const App = () => {
     return (
@@ -36,7 +37,7 @@ const App = () => {
                     <Route path="/profile/edit" element={<EditProfilePage/>}/>
                     <Route path="/profile/stats" element={<StatsPage/>}/>
                     <Route path="/profile/friends" element={<FriendsPage/>}/>
-                    <Route path="/log" element={<PlaceholderPage title={"log"}/>}/>
+                    <Route path="/log" element={<LogDrinkPage/>}/>
                     <Route path="/snap" element={<PlaceholderPage title={"snap"}/>}/>
 
 
