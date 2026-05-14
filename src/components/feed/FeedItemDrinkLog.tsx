@@ -1,8 +1,8 @@
-import type { FeedItem } from '@/types/feed';
-import { Avatar } from '@/components/ui/components/Avatar';
-import { Badge } from '@/components/ui/components/Badge';
-import { UserRankPill } from '@/components/ui/components/UserRankPill';
-import { drinkCategoryConfig, type DrinkCategory } from '@/types/drinkCategory';
+import type {FeedItem} from '@/types/feed';
+import {Avatar} from '@/components/ui/components/Avatar';
+import {Badge} from '@/components/ui/components/Badge';
+import {UserRankPill} from '@/components/ui/components/UserRankPill';
+import {type DrinkCategory, drinkCategoryConfig} from '@/types/drinkCategory';
 import {formatTimeAgo} from "@/utils/date.ts";
 
 interface Props {
@@ -39,8 +39,11 @@ export const FeedItemDrinkLog = ({ item }: Props) => {
                             fallback={actor.username}
                             size="sm"
                         />
-                        <p className="text-sm font-semibold truncate" style={{ color: 'var(--color-text)' }}>
+                        <p className="text-sm font-semibold truncate flex items-center gap-0.5" style={{ color: 'var(--color-text)' }}>
                             {actor.username}
+                            <span className="text-xs font-medium opacity-50 tabular-nums">
+                                #{actor.discriminator}
+                            </span>
                         </p>
                     </div>
                     <UserRankPill
@@ -51,12 +54,7 @@ export const FeedItemDrinkLog = ({ item }: Props) => {
 
                 {/* Timestamp */}
                 <p className="text-xs mb-3" style={{ color: 'var(--color-muted)' }}>
-                    Member #{actor.discriminator} · {timeAgo}
-                </p>
-
-                {/* Logged a drink label */}
-                <p className="text-sm mb-2" style={{ color: 'var(--color-muted)' }}>
-                    Logged a drink
+                    Logged a drink · {timeAgo}
                 </p>
 
                 {/* Drink name + rating */}
