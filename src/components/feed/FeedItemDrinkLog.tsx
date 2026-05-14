@@ -31,44 +31,50 @@ export const FeedItemDrinkLog = ({ item }: Props) => {
 
             {/* Content below photo */}
             <div className="p-4">
-                {/* User header with rank pill */}
-                <div className="flex items-center justify-between gap-2 mb-1">
-                    <div className="flex items-center gap-2 min-w-0">
-                        <Avatar
-                            src={actor.avatarUrl}
-                            fallback={actor.username}
-                            size="sm"
-                        />
-                        <p className="text-sm font-semibold truncate flex items-center gap-0.5" style={{ color: 'var(--color-text)' }}>
-                            {actor.username}
-                            <span className="text-xs font-medium opacity-50 tabular-nums">
-                                #{actor.discriminator}
-                            </span>
-                        </p>
+                {/* User header */}
+                {actor && (
+                    <div className="flex items-center justify-between gap-2 mb-1">
+                        <div className="flex items-center gap-2 min-w-0">
+                            <Avatar
+                                src={actor.avatarUrl}
+                                fallback={actor.username}
+                                size="sm"
+                            />
+                            <div className="flex flex-col">
+                                <div className="flex items-center gap-1.5">
+                                    <p className="text-sm font-bold truncate leading-none text-(--color-text)">
+                                        {actor.username}
+                                        <span className="ml-0.5 text-[10px] font-normal opacity-40 tabular-nums">
+                                            #{actor.discriminator}
+                                        </span>
+                                    </p>
+                                    <UserRankPill accountType={actor.accountType} compact />
+                                </div>
+                                <span className="text-[10px] font-medium text-(--color-muted)">
+                                    {timeAgo}
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                    <UserRankPill
-                        accountType={actor.accountType}
-                        compact
-                    />
-                </div>
+                )}
 
-                {/* Timestamp */}
-                <p className="text-xs mb-3" style={{ color: 'var(--color-muted)' }}>
-                    Logged a drink · {timeAgo}
+                {/* Subtitle */}
+                <p className="text-xs mb-3 text-(--color-muted)">
+                    Logged a drink{!actor ? ` · ${timeAgo}` : ''}
                 </p>
 
                 {/* Drink name + rating */}
                 <div className="flex items-center justify-between gap-3 mb-2">
                     <div className="flex items-center gap-2 min-w-0">
                         <Icon size={20} className={config.color} />
-                        <p className="font-bold text-xl truncate" style={{ color: 'var(--color-text)' }}>
+                        <p className="font-bold text-xl truncate text-(--color-text)">
                             {drinkLog.displayName}
                         </p>
                     </div>
                     {drinkLog.rating != null && (
                         <div className="flex items-center gap-1 shrink-0">
                             <span style={{ fontSize: '20px', color: '#f59e0b' }}>★</span>
-                            <span className="font-bold text-lg" style={{ color: 'var(--color-text)' }}>
+                            <span className="font-bold text-lg text-(--color-text)">
                                 {(drinkLog.rating / 2).toFixed(1)}
                             </span>
                         </div>
@@ -83,7 +89,7 @@ export const FeedItemDrinkLog = ({ item }: Props) => {
                         </Badge>
                     )}
                     {drinkLog.quantity && drinkLog.quantity > 1 && (
-                        <span className="text-xs" style={{ color: 'var(--color-muted)' }}>
+                        <span className="text-xs text-(--color-muted)">
                             ×{drinkLog.quantity}
                         </span>
                     )}

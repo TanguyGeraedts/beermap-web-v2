@@ -16,6 +16,7 @@ import {LogDrinkPage} from "@/pages/log/LogDrinkPage.tsx";
 import {SnapPage} from "@/pages/log/SnapPage.tsx";
 import {DraftsPage} from "@/pages/log/DraftsPage.tsx";
 import {ChangelogPage} from "@/pages/meta/ChangeLogPage.tsx";
+import {LegalPage} from "@/pages/meta/LegalPage.tsx";
 
 const App = () => {
     return (
@@ -24,6 +25,9 @@ const App = () => {
                 {/* STANDALONE PAGES */}
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/profile/create" element={<CreateProfilePage />} />
+                <Route path="/changelog" element={<ChangelogPage />} />
+                <Route path="/legal" element={<LegalPage />} />
+
 
                 {/* LAYOUT WRAPPER:*/}
                 <Route element={<AppLayout />}>
@@ -43,8 +47,6 @@ const App = () => {
                     <Route path="/log" element={<LogDrinkPage />} />
                     <Route path="/snap" element={<SnapPage />} />
                     <Route path="/drafts" element={<DraftsPage />} />
-                    <Route path="/changelog" element={<ChangelogPage />} />
-
 
                     {/* DEV PAGES: */}
                     <Route path="/ui-components" element={<UIComponentsPage />} />

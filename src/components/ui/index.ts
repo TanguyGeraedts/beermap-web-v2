@@ -11,6 +11,7 @@ export { SegmentedControl } from './components/SegmentedControl';
 export { DiscriminatorInput } from './components/DescriminatorInput';
 export { Rating } from './components/Rating';
 export { VersionPill } from './components/VersionPill';
+export { LegalPill } from './components/LegalPill';
 
 // Display
 export { ButtonDisplay } from './display/ButtonDisplay';
