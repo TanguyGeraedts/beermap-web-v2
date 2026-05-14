@@ -13,6 +13,8 @@ import {FriendsPage} from "@/pages/friendship/FriendsPage.tsx";
 import {MapPage} from "@/pages/map/MapPage.tsx";
 import {FeedPage} from "@/pages/feed/FeedPage.tsx";
 import {LogDrinkPage} from "@/pages/log/LogDrinkPage.tsx";
+import {SnapPage} from "@/pages/log/SnapPage.tsx";
+import {DraftsPage} from "@/pages/log/DraftsPage.tsx";
 
 const App = () => {
     return (
@@ -37,8 +39,9 @@ const App = () => {
                     <Route path="/profile/edit" element={<EditProfilePage/>}/>
                     <Route path="/profile/stats" element={<StatsPage/>}/>
                     <Route path="/profile/friends" element={<FriendsPage/>}/>
-                    <Route path="/log" element={<LogDrinkPage/>}/>
-                    <Route path="/snap" element={<PlaceholderPage title={"snap"}/>}/>
+                    <Route path="/log" element={<LogDrinkPage />} />
+                    <Route path="/snap" element={<SnapPage />} />
+                    <Route path="/drafts" element={<DraftsPage />} />
 
 
                     {/* DEV PAGES: */}
