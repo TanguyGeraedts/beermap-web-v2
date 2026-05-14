@@ -15,6 +15,7 @@ import {FeedPage} from "@/pages/feed/FeedPage.tsx";
 import {LogDrinkPage} from "@/pages/log/LogDrinkPage.tsx";
 import {SnapPage} from "@/pages/log/SnapPage.tsx";
 import {DraftsPage} from "@/pages/log/DraftsPage.tsx";
+import {ChangelogPage} from "@/pages/meta/ChangeLogPage.tsx";
 
 const App = () => {
     return (
@@ -42,6 +43,7 @@ const App = () => {
                     <Route path="/log" element={<LogDrinkPage />} />
                     <Route path="/snap" element={<SnapPage />} />
                     <Route path="/drafts" element={<DraftsPage />} />
+                    <Route path="/changelog" element={<ChangelogPage />} />
 
 
                     {/* DEV PAGES: */}

@@ -1,14 +1,16 @@
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {
     AlertDisplay,
     AvatarDisplay,
     BadgeDisplay,
+    Button,
     ButtonDisplay,
     CardDisplay,
     InputDisplay,
+    RatingDisplay,
+    SegmentedControlDisplay,
     SkeletonDisplay,
-    UserRankPillDisplay,
-    Button, SegmentedControlDisplay, RatingDisplay
+    UserRankPillDisplay, VersionPillDisplay
 } from "@/components/ui";
 
 export const UIComponentsPage = () => {
@@ -43,6 +45,7 @@ export const UIComponentsPage = () => {
                     <CardDisplay />
                     <AvatarDisplay/>
                     <UserRankPillDisplay/>
+                    <VersionPillDisplay/>
                     <SegmentedControlDisplay/>
                     <RatingDisplay/>
                     <InputDisplay />

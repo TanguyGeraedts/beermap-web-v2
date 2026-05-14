@@ -27,10 +27,10 @@ export const VOLUME_PRESETS: Record<DrinkCategory, VolumePreset[]> = {
         { label: '300ml', ml: 300 },
     ],
     SPIRITS: [
-        { label: '25ml', ml: 25 },
-        { label: '50ml', ml: 50 },
-        { label: '75ml', ml: 75 },
-        { label: '100ml', ml: 100 },
+        { label: 'Single (25ml)', ml: 25 },
+        { label: 'Double (50ml)', ml: 50 },
+        { label: 'Triple (75ml)', ml: 75 },
+        { label: ' Large (100ml)', ml: 100 },
     ],
     OTHER: [
         { label: '100ml', ml: 100 },

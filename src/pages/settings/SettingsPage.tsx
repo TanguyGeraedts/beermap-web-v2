@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { useTheme } from '@/hooks/useTheme';
-import { Button, Card } from '@/components/ui';
+import { Button, Card, VersionPill } from '@/components/ui';
 
 export const SettingsPage = () => {
     const navigate = useNavigate();
@@ -24,6 +24,7 @@ export const SettingsPage = () => {
                 </Button>
             </header>
 
+            {/* Admin Settings Section ... (remains unchanged) */}
             {isAdmin && (
                 <section className="space-y-2">
                     <h2 className="text-xs font-bold uppercase text-(--color-muted) px-1">
@@ -43,7 +44,7 @@ export const SettingsPage = () => {
                 </section>
             )}
 
-            {/* Appearance */}
+            {/* Appearance Section ... (remains unchanged) */}
             <section className="space-y-2">
                 <h2 className="text-xs font-bold uppercase text-(--color-muted) px-1">
                     Appearance
@@ -74,7 +75,7 @@ export const SettingsPage = () => {
                 </Card>
             </section>
 
-            {/* Application */}
+            {/* Application Section - Added Version Here */}
             <section className="space-y-2">
                 <h2 className="text-xs font-bold uppercase text-(--color-muted) px-1">
                     Application
@@ -83,6 +84,12 @@ export const SettingsPage = () => {
                     <Card.Body className="flex flex-col gap-2">
                         <Button variant="secondary" className="justify-start">Privacy</Button>
                         <Button variant="secondary" className="justify-start">Notifications</Button>
+
+                        {/* New Version Row */}
+                        <div className="flex items-center justify-between p-2 mt-2 border-t border-(--color-border) pt-4">
+                            <span className="text-sm font-medium text-(--color-text)">Version Info</span>
+                            <VersionPill />
+                        </div>
                     </Card.Body>
                 </Card>
             </section>

@@ -10,6 +10,7 @@ export { UserRankPill } from './components/UserRankPill';
 export { SegmentedControl } from './components/SegmentedControl';
 export { DiscriminatorInput } from './components/DescriminatorInput';
 export { Rating } from './components/Rating';
+export { VersionPill } from './components/VersionPill';
 
 // Display
 export { ButtonDisplay } from './display/ButtonDisplay';
@@ -22,3 +23,4 @@ export { SkeletonDisplay } from './display/SkeletonDisplay';
 export { UserRankPillDisplay } from './display/UserRankPillDisplay';
 export { SegmentedControlDisplay } from './display/SegmentedControlDisplay';
 export { RatingDisplay } from './display/RatingDisplay';
+export { VersionPillDisplay } from './display/VersionPillDisplay';

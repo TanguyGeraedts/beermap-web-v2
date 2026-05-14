@@ -9,3 +9,4 @@ export * from './drinkLog';
 export * from './drinkCatalog';
 export * from './drinkCategory';
 export * from './draftLog';
+export * from './meta';
