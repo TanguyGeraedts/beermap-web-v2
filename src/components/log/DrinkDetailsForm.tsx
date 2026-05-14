@@ -10,6 +10,7 @@ import { imageService } from '@/services/imageService';
 interface DrinkDetailsFormProps {
     catalogItem: DrinkCatalogItemResponse | null;
     customName?: string;
+    draftPhotoUrl?: string | null;
     onBack: () => void;
     onSubmit: (payload: LogDrinkRequest) => void;
     isSubmitting: boolean;
@@ -18,6 +19,7 @@ interface DrinkDetailsFormProps {
 export const DrinkDetailsForm = ({
                                      catalogItem,
                                      customName = '',
+                                     draftPhotoUrl = null,
                                      onBack,
                                      onSubmit,
                                      isSubmitting,
@@ -31,7 +33,7 @@ export const DrinkDetailsForm = ({
     const [quantity, setQuantity] = useState(1);
     const [rating, setRating] = useState(0);
     const [notes, setNotes] = useState('');
-    const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+    const [photoUrl, setPhotoUrl] = useState<string | null>(draftPhotoUrl ?? null);
     const [isUploading, setIsUploading] = useState(false);
     const [moreOpen, setMoreOpen] = useState(false);
     const activeCategory = lockedCategory ?? category;
