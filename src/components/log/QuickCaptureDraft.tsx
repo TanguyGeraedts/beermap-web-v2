@@ -1,9 +1,10 @@
-import {useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {Camera, Loader2} from 'lucide-react';
 import {imageService} from '@/services/imageService';
 import {useCreateDraftLog, useDraftLogs} from '@/hooks/useDraftLog';
 import {useIsPremium} from '@/hooks/useIsPremium';
-import {DRAFT_LIMITS} from '@/config/draftConfig';
+import {DRAFT_LIMITS} from "@/config";
+
 
 export const QuickDraftCapture = () => {
     const [isUploading, setIsUploading] = useState(false);

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ChevronLeft, Sparkles } from 'lucide-react';
 import { DrinkCatalogItemResponse, DrinkCategory, drinkCategoryConfig, LogDrinkRequest } from '@/types';
 import { Button, Rating } from '@/components/ui';
-import { VOLUME_PRESETS, DEFAULT_VOLUMES, getSubtypeSuggestions } from '@/config/drinkConfig';
+import { VOLUME_PRESETS, DEFAULT_VOLUMES, getSubtypeSuggestions } from '@/config';
 import { DrinkMoreDetails } from './DrinkMoreDetails';
 import { DrinkPhotoUpload } from './DrinkPhotoUpload';
 import { imageService } from '@/services/imageService';
