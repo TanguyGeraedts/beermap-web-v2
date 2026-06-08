@@ -23,6 +23,10 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --color-drink-light:    #f6d98a;
+  --color-drink-moderate: #c88719;
+  --color-drink-heavy:    #7c4a0a;
+  --color-drink-text:     #1f1a12;
 }
 
 :root[data-theme='dark'] {
@@ -38,6 +42,10 @@
   --color-ring: #ffd166;
   --color-ring-soft: rgb(244 183 64 / 18%);
   --shadow-nav: 0 18px 48px rgb(0 0 0 / 48%);
+  --color-drink-light:    rgb(244 183 64 / 28%);
+  --color-drink-moderate: #f4b740;
+  --color-drink-heavy:    #d99a26;
+  --color-drink-text:     #211807;
 }
 
 * {

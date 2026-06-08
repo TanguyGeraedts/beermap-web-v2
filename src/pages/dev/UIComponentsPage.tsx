@@ -5,7 +5,7 @@ import {
     BadgeDisplay,
     Button,
     ButtonDisplay,
-    CardDisplay,
+    CardDisplay, DrinkCalendarDisplay,
     InputDisplay,
     RatingDisplay,
     SegmentedControlDisplay,
@@ -52,6 +52,7 @@ export const UIComponentsPage = () => {
                     <BadgeDisplay />
                     <AlertDisplay />
                     <SkeletonDisplay />
+                    <DrinkCalendarDisplay/>
                 </div>
             </div>
         </div>

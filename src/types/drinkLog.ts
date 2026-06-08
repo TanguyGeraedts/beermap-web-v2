@@ -52,6 +52,7 @@ export interface DrinkLogResponse {
 }
 
 export interface DrinkLogTimeline {
+    items: any;
     content: DrinkLogResponse[];
     totalElements: number;
     totalPages: number;

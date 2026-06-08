@@ -12,6 +12,7 @@ export { DiscriminatorInput } from './components/DescriminatorInput';
 export { Rating } from './components/Rating';
 export { VersionPill } from './components/VersionPill';
 export { LegalPill } from './components/LegalPill';
+export { DrinkCalendar } from './components/DrinkCalendar';
 
 // Display
 export { ButtonDisplay } from './display/ButtonDisplay';
@@ -25,3 +26,4 @@ export { UserRankPillDisplay } from './display/UserRankPillDisplay';
 export { SegmentedControlDisplay } from './display/SegmentedControlDisplay';
 export { RatingDisplay } from './display/RatingDisplay';
 export { VersionPillDisplay } from './display/VersionPillDisplay';
+export { DrinkCalendarDisplay } from './display/DrinkCalendarDisplay';
