@@ -18,6 +18,7 @@ import {DraftsPage} from "@/pages/log/DraftsPage.tsx";
 import {ChangelogPage} from "@/pages/meta/ChangeLogPage.tsx";
 import {LegalPage} from "@/pages/meta/LegalPage.tsx";
 import {JournalPage} from "@/pages/journal/JournalPage.tsx";
+import {JournalDayPage} from "@/pages/journal/JournalDayPage.tsx";
 
 const App = () => {
     return (
@@ -48,6 +49,7 @@ const App = () => {
                     <Route path="/log" element={<LogDrinkPage />} />
                     <Route path="/snap" element={<SnapPage />} />
                     <Route path="/drafts" element={<DraftsPage />} />
+                    <Route path="/journal/day/:date" element={<JournalDayPage />} />
 
                     {/* DEV PAGES: */}
                     <Route path="/ui-components" element={<UIComponentsPage />} />

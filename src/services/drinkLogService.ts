@@ -14,6 +14,11 @@ export const drinkLogService = {
         return data;
     },
 
+    getDrinksFromDay: async (date: string) => {
+        const { data } = await apiClient.get<DrinkLogResponse[]>(`/drink-logs/me/day/${date}`);
+        return data;
+    },
+
     getLog: async (logId: string) => {
         const { data } = await apiClient.get<DrinkLogResponse>(`/drink-logs/me/${logId}`);
         return data;

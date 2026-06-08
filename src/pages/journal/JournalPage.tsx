@@ -3,44 +3,49 @@ import { useNavigate } from 'react-router-dom';
 import { DrinkCalendar } from '@/components/ui/components/DrinkCalendar';
 import { useJournalMonth } from '@/hooks/useJournalMonth';
 import { LastDrinkCard } from '@/components/journal/LastDrinkCard';
+import {Button} from "@/components/ui";
 
 export const JournalPage = () => {
     const navigate = useNavigate();
     const { data: drinkData, isLoading } = useJournalMonth();
+
+    const handleDayClick = (dateStr: string) => {
+        navigate(`/journal/day/${dateStr}`);
+    };
 
     return (
         <div className="space-y-4">
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                    <BookOpen size={18} style={{ color: 'var(--color-primary)' }} />
-                    <h1 className="text-xl font-bold" style={{ color: 'var(--color-text)' }}>Journal</h1>
+                    <BookOpen size={18} className="text-[var(--color-primary)]" />
+                    <h1 className="text-xl font-bold text-[var(--color-text)]">Journal</h1>
                 </div>
-                <button
+
+                <Button
+                    variant="secondary"
+                    size="sm"
+                    className="gap-1.5 rounded-xl !px-3 !py-1.5 text-sm font-medium text-[var(--color-muted)]"
                     onClick={() => navigate('/drafts')}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium transition-colors"
-                    style={{
-                        background: 'var(--color-surface)',
-                        border: '1px solid var(--color-border)',
-                        color: 'var(--color-muted)',
-                    }}
                 >
                     <FilePen size={14} />
                     Drafts
-                </button>
+                </Button>
             </div>
 
-            {/* Last drink */}
+            {/* Last drink overview banner */}
             <LastDrinkCard />
 
-            {/* Calendar */}
+            {/* Monthly Grid Calendar Component View */}
             {isLoading ? (
                 <div
-                    className="rounded-xl h-96 animate-pulse"
-                    style={{ background: 'var(--color-surface)' }}
+                    className="rounded-xl h-96 animate-pulse bg-[var(--color-surface)]"
                 />
             ) : (
-                <DrinkCalendar drinkData={drinkData ?? {}} />
+                <DrinkCalendar
+                    drinkData={drinkData ?? {}}
+                    onDayClick={handleDayClick}
+                />
             )}
         </div>
     );
