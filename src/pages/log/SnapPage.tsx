@@ -1,10 +1,10 @@
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Camera, Loader2, ChevronLeft } from 'lucide-react';
 import { imageService } from '@/services/imageService';
 import { useCreateDraftLog, useDraftLogs } from '@/hooks/useDraftLog';
 import { useIsPremium } from '@/hooks/useIsPremium';
-import {DRAFT_LIMITS} from "@/config";
+import { DRAFT_LIMITS } from "@/config";
+import { Camera, ChevronLeft, Loader2 } from "lucide-react";
 
 export const SnapPage = () => {
     const navigate = useNavigate();
@@ -24,14 +24,14 @@ export const SnapPage = () => {
 
         try {
             setIsUploading(true);
-            const photoUrl = await imageService.uploadDrinkLogImage(file); //
+            const photoUrl = await imageService.uploadDrinkLogImage(file);
 
             await createDraft.mutateAsync({
                 photoUrl,
                 capturedAt: new Date().toISOString()
             });
 
-            navigate('/drafts'); // Go to list after successful snap
+            navigate('/drafts');
         } catch (error) {
             console.error("Snap failed:", error);
         } finally {
@@ -40,31 +40,49 @@ export const SnapPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-(--color-background) flex flex-col">
-            <div className="px-6 pt-10 pb-4 flex items-center gap-4">
-                <button onClick={() => navigate(-1)} className="p-2 -ml-2 hover:bg-surface rounded-full">
-                    <ChevronLeft size={24} />
+        <div className="space-y-4">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                    <Camera size={18} style={{ color: 'var(--color-primary)' }} />
+                    <h1 className="text-xl font-bold" style={{ color: 'var(--color-text)' }}>Snap</h1>
+                </div>
+                <button
+                    onClick={() => navigate(-1)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium transition-colors"
+                    style={{
+                        background: 'var(--color-surface)',
+                        border: '1px solid var(--color-border)',
+                        color: 'var(--color-muted)',
+                    }}
+                >
+                    <ChevronLeft size={14} strokeWidth={2.5} />
+                    Back
                 </button>
-                <h1 className="text-2xl font-bold">Snap a Drink</h1>
             </div>
 
-            <div className="flex-1 px-6 flex flex-col items-center justify-center">
+            {/* Core Snap Action Area */}
+            <div className="flex flex-col items-center justify-center py-6">
                 <button
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isUploading || isAtLimit}
-                    className={`w-full aspect-square max-w-sm flex flex-col items-center justify-center border-2 border-dashed rounded-[3rem] transition-all
-                        ${isAtLimit ? 'bg-muted/5 border-muted opacity-50' : 'bg-surface border-primary active:scale-95'}`}
+                    className="w-full aspect-square max-w-sm flex flex-col items-center justify-center border border-dashed rounded-2xl transition-all active:scale-[0.98]"
+                    style={{
+                        background: 'var(--color-surface)',
+                        borderColor: isAtLimit ? 'var(--color-border)' : 'var(--color-primary)',
+                        opacity: isAtLimit ? 0.5 : 1
+                    }}
                 >
                     {isUploading ? (
-                        <Loader2 className="animate-spin text-primary" size={48} />
+                        <Loader2 className="animate-spin" size={32} style={{ color: 'var(--color-primary)' }} strokeWidth={2.5} />
                     ) : (
-                        <Camera size={48} className={isAtLimit ? 'text-muted' : 'text-primary'} />
+                        <Camera size={32} style={{ color: isAtLimit ? 'var(--color-muted)' : 'var(--color-primary)' }} />
                     )}
-                    <p className="mt-4 font-bold text-lg">
+                    <p className="mt-4 font-bold text-sm" style={{ color: 'var(--color-text)' }}>
                         {isUploading ? 'Uploading...' : isAtLimit ? 'Limit Reached' : 'Take Photo'}
                     </p>
-                    <p className="text-xs text-muted uppercase tracking-widest mt-1">
-                        {drafts.length} / {limit} Drafts Used
+                    <p className="text-[10px] uppercase tracking-wider mt-1 font-mono" style={{ color: 'var(--color-muted)' }}>
+                        {drafts.length} / {limit} Drafts
                     </p>
                 </button>
 
