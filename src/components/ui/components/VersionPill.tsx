@@ -19,7 +19,7 @@ export const VersionPill = forwardRef<HTMLButtonElement, VersionPillProps>(
         if (isLoading || isError || !data) return null;
 
         const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-            navigate('/changelog'); // Update this path to your actual changelog route
+            navigate('/changelog');
             props.onClick?.(e);
         };
 
@@ -30,13 +30,17 @@ export const VersionPill = forwardRef<HTMLButtonElement, VersionPillProps>(
                 type="button"
                 className={`
                     inline-flex items-center justify-center rounded-full font-mono font-medium
-                    bg-slate-100 text-slate-600 border border-slate-200
                     px-2 py-0.5 text-[10px] uppercase tracking-wider
                     transition-all duration-200 ease-in-out
-                    hover:bg-slate-200 hover:text-slate-900 hover:border-slate-300
-                    active:scale-95 cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-slate-300
+                    hover:brightness-95 dark:hover:brightness-110
+                    active:scale-95 cursor-pointer focus:outline-none 
                     ${className}
                 `}
+                style={{
+                    background: 'var(--color-surface-muted)',
+                    color: 'var(--color-muted)',
+                    border: '1px solid var(--color-border)',
+                }}
                 {...props}
             >
                 {showIcon && (
