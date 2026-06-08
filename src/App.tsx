@@ -19,8 +19,10 @@ import {ChangelogPage} from "@/pages/meta/ChangeLogPage.tsx";
 import {LegalPage} from "@/pages/meta/LegalPage.tsx";
 import {JournalPage} from "@/pages/journal/JournalPage.tsx";
 import {JournalDayPage} from "@/pages/journal/JournalDayPage.tsx";
+import {useTheme} from "@/hooks/useTheme.ts";
 
 const App = () => {
+    useTheme();
     return (
         <AppProviders>
             <Routes>
