@@ -1,18 +1,36 @@
-export type MapPinFilter = 'all' | 'friends' | 'private';
+import type { AccountType } from './auth';
 
-export interface DrinkLogPin {
+export type MapMode = 'MINE' | 'FRIENDS' | 'GLOBAL';
+
+export interface UserSummary {
     id: string;
-    displayName: string;
-    category: string;
-    subType?: string;
-    abvPercent?: number;
-    consumedAt: string;       // ISO string
-    quantity: number;
-    volumeMl?: number;
-    rating?: number;
-    description?: string;
-    photoUrl?: string;
-    latitude: number;
-    longitude: number;
+    username: string;
+    discriminator: string;
+    avatarUrl?: string;
+    accountType: AccountType;
 }
 
+export interface MapPin {
+    logId: string;
+    latitude: number;
+    longitude: number;
+    category: string;
+    displayName: string;
+    subType?: string;
+    userSummary: UserSummary;
+    rating?: number;
+    photoUrl?: string;
+    consumedAt: string;
+}
+
+export interface MapPinsParams {
+    mode?: MapMode;
+    categories?: string[];
+    from?: string;
+    to?: string;
+    minLat: number;
+    minLon: number;
+    maxLat: number;
+    maxLon: number;
+    limit?: number;
+}

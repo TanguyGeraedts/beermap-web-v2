@@ -1,18 +1,19 @@
-import { useEffect, useRef, forwardRef } from 'react';
+import { useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import type { DrinkLogPin } from '@/types/map';
-import { createDrinkPin, createClusterPin } from './DrinkPin';
+import type { MapPin } from '@/types/map';
+import {createClusterPin, createDrinkPin} from "@/components/map/MapPin.tsx";
 
 interface ClusteredPin {
-    pins: DrinkLogPin[];
+    pins: MapPin[];
     lat: number;
     lng: number;
 }
 
-function clusterPins(pins: DrinkLogPin[], zoom: number): ClusteredPin[] {
-    const cellSize = Math.max(0.001, 2 / Math.pow(2, zoom - 8));
-    const cells = new Map<string, DrinkLogPin[]>();
+function clusterPins(pins: MapPin[], zoom: number): ClusteredPin[] {
+    //Adjusting cluster here
+    const cellSize = Math.max(0.0005, 0.40 / Math.pow(2, zoom - 8));
+    const cells = new Map<string, MapPin[]>();
 
     for (const pin of pins) {
         const key = `${Math.floor(pin.latitude / cellSize)}:${Math.floor(pin.longitude / cellSize)}`;
@@ -27,7 +28,7 @@ function clusterPins(pins: DrinkLogPin[], zoom: number): ClusteredPin[] {
     }));
 }
 
-function buildPopup(pins: DrinkLogPin[]): string {
+function buildPopup(pins: MapPin[]): string {
     if (pins.length === 1) {
         const p = pins[0];
         const date = new Date(p.consumedAt).toLocaleDateString(undefined, {
@@ -36,20 +37,23 @@ function buildPopup(pins: DrinkLogPin[]): string {
         const stars = p.rating != null
             ? '★'.repeat(Math.round(p.rating / 2)) + '☆'.repeat(Math.max(0, 5 - Math.round(p.rating / 2)))
             : null;
+        const actor = `${p.userSummary.username}<span style="opacity:0.45">#${p.userSummary.discriminator}</span>`;
         return `
             <div style="min-width:140px;max-width:200px">
                 <strong style="font-size:0.875rem;display:block;margin-bottom:2px">${p.displayName}</strong>
                 ${p.subType ? `<span style="font-size:0.75rem;opacity:0.65">${p.subType}</span>` : ''}
                 ${stars ? `<div style="color:#f59e0b;font-size:0.75rem;margin-top:3px">${stars}</div>` : ''}
-                ${p.description ? `<p style="margin:5px 0 0;font-size:0.75rem;opacity:0.75">${p.description}</p>` : ''}
-                <span style="display:block;margin-top:5px;font-size:0.7rem;opacity:0.5">${date}</span>
+                <div style="margin-top:5px;font-size:0.72rem;opacity:0.6">${actor}</div>
+                <span style="display:block;margin-top:3px;font-size:0.7rem;opacity:0.45">${date}</span>
             </div>
         `;
     }
 
     const shown = pins.slice(0, 5);
     const rest = pins.length - shown.length;
-    const rows = shown.map((p) => `<li style="padding:2px 0;font-size:0.8rem">${p.displayName}</li>`).join('');
+    const rows = shown
+        .map((p) => `<li style="padding:2px 0;font-size:0.8rem">${p.displayName} <span style="opacity:0.45;font-size:0.7rem">${p.userSummary.username}#${p.userSummary.discriminator}</span></li>`)
+        .join('');
     return `
         <div style="min-width:140px">
             <strong style="font-size:0.875rem">${pins.length} drinks here</strong>
@@ -59,11 +63,19 @@ function buildPopup(pins: DrinkLogPin[]): string {
     `;
 }
 
+interface BBox {
+    minLat: number;
+    minLon: number;
+    maxLat: number;
+    maxLon: number;
+}
+
 interface LeafletMapProps {
     center?: [number, number];
     zoom?: number;
-    pins?: DrinkLogPin[];
+    pins?: MapPin[];
     className?: string;
+    onBoundsChange?: (bbox: BBox) => void;
 }
 
 export interface LeafletMapHandle {
@@ -71,18 +83,32 @@ export interface LeafletMapHandle {
 }
 
 export const LeafletMap = forwardRef<LeafletMapHandle, LeafletMapProps>(
-    ({
-         center = [50.8503, 4.3517],
-         zoom = 13,
-         pins = [],
-         className = '',
-     }, ref) => {
+    ({ center = [50.8503, 4.3517], zoom = 13, pins = [], className = '', onBoundsChange }, ref) => {
         const containerRef = useRef<HTMLDivElement>(null);
         const mapRef = useRef<L.Map | null>(null);
         const markersRef = useRef<L.Marker[]>([]);
-        const pinsRef = useRef<DrinkLogPin[]>(pins);
+        const pinsRef = useRef<MapPin[]>(pins);
+        const onBoundsChangeRef = useRef(onBoundsChange);
 
-        const renderMarkers = (map: L.Map, allPins: DrinkLogPin[], currentZoom: number) => {
+        // Keep the callback ref fresh without re-running map effects
+        useEffect(() => {
+            onBoundsChangeRef.current = onBoundsChange;
+        }, [onBoundsChange]);
+
+        useImperativeHandle(ref, () => ({
+            centerOnLocation: () => {
+                if (navigator.geolocation && mapRef.current) {
+                    navigator.geolocation.getCurrentPosition((pos) => {
+                        mapRef.current?.setView(
+                            [pos.coords.latitude, pos.coords.longitude],
+                            mapRef.current.getZoom()
+                        );
+                    });
+                }
+            },
+        }));
+
+        const renderMarkers = (map: L.Map, allPins: MapPin[], currentZoom: number) => {
             markersRef.current.forEach((m) => m.remove());
             markersRef.current = [];
 
@@ -100,22 +126,6 @@ export const LeafletMap = forwardRef<LeafletMapHandle, LeafletMapProps>(
             }
         };
 
-        // Expose centerOnLocation method via ref
-        useEffect(() => {
-            if (ref && typeof ref === 'object' && 'current' in ref) {
-                ref.current = {
-                    centerOnLocation: () => {
-                        if (navigator.geolocation && mapRef.current) {
-                            navigator.geolocation.getCurrentPosition((pos) => {
-                                const { latitude, longitude } = pos.coords;
-                                mapRef.current?.setView([latitude, longitude], mapRef.current.getZoom());
-                            });
-                        }
-                    },
-                };
-            }
-        }, [ref]);
-
         // Initialise map once
         useEffect(() => {
             if (!containerRef.current || mapRef.current) return;
@@ -124,11 +134,23 @@ export const LeafletMap = forwardRef<LeafletMapHandle, LeafletMapProps>(
 
             L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
 
-            map.on('zoomend', () => {
-                renderMarkers(map, pinsRef.current, map.getZoom());
-            });
+            const emitBounds = () => {
+                const b = map.getBounds();
+                onBoundsChangeRef.current?.({
+                    minLat: b.getSouth(),
+                    minLon: b.getWest(),
+                    maxLat: b.getNorth(),
+                    maxLon: b.getEast(),
+                });
+            };
+
+            map.on('zoomend', () => renderMarkers(map, pinsRef.current, map.getZoom()));
+            map.on('moveend zoomend', emitBounds);
 
             mapRef.current = map;
+
+            // Emit initial bounds once the map has settled
+            map.whenReady(emitBounds);
 
             return () => {
                 map.remove();

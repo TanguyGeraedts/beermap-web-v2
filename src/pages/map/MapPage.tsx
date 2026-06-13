@@ -1,125 +1,73 @@
-import { useState, useRef } from 'react';
-import { Globe, Users, Lock, RefreshCw, AlertCircle } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { RefreshCw, AlertCircle } from 'lucide-react';
 import { LeafletMap, type LeafletMapHandle } from '@/components/map/LeafletMap';
+import { MapFilter } from '@/components/map/MapFilter';
 import { useMapPins } from '@/hooks/useMapPins';
-import type { MapPinFilter } from '@/types/map';
-import {LogDrinkButton} from "@/components/map/LogdrinkButton.tsx";
-import {useNavigate} from "react-router-dom";
-import {LocationButton} from "@/components/map/Locationbutton.tsx";
+import type { MapMode } from '@/types/map';
+import { LogDrinkButton } from '@/components/map/LogdrinkButton';
+import { LocationButton } from '@/components/map/Locationbutton';
+import { useNavigate } from 'react-router-dom';
 
-const FILTERS: { id: MapPinFilter; label: string; icon: typeof Globe }[] = [
-    { id: 'all',     label: 'All',     icon: Globe  },
-    { id: 'friends', label: 'Friends', icon: Users  },
-    { id: 'private', label: 'Only me', icon: Lock   },
-];
+const DEFAULT_BBOX = { minLat: 50.77, minLon: 4.25, maxLat: 50.93, maxLon: 4.45 };
 
 export const MapPage = () => {
-    const { data: pins = [], isLoading, error, refetch } = useMapPins();
-    const [activeFilter, setActiveFilter] = useState<MapPinFilter>('all');
+    const [mode, setMode] = useState<MapMode>('MINE');
+    const [bbox, setBbox] = useState(DEFAULT_BBOX);
     const mapRef = useRef<LeafletMapHandle>(null);
-
     const navigate = useNavigate();
-    const visiblePins = pins;
 
-    const handleLogDrink = () => {
-        navigate("/log")
-    };
+    const { data: pins = [], isLoading, error, refetch } = useMapPins({ mode, ...bbox });
 
-    const handleSnapDrink = () => {
-        navigate("/snap")
-    };
-
-    const handleCenterLocation = () => {
-        mapRef.current?.centerOnLocation();
-    };
+    useEffect(() => {
+        if (mapRef.current) {
+            mapRef.current.centerOnLocation();
+        }
+    }, []);
 
     return (
         <div className="fixed inset-0 z-0">
             <LeafletMap
                 ref={mapRef}
-                center={[50.8503, 4.3517]}
-                zoom={14}
-                pins={visiblePins}
-                className="absolute inset-0"
+                pins={pins}
+                className="w-full h-full"
+                onBoundsChange={(newBbox) => setBbox(newBbox)}
             />
 
-            <div className="absolute top-4 left-0 right-0 z-[400] flex flex-col items-center gap-2 pointer-events-none px-4">
-
+            {/* Top-left state info indicators */}
+            <div className="absolute top-4 left-4 z-500 pointer-events-none flex flex-col gap-2">
+                {isLoading && (
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-(--color-surface)/90 text-(--color-text) backdrop-blur-md text-xs font-medium shadow-md border border-(--color-border)">
+                        <RefreshCw size={12} className="animate-spin text-(--color-primary)" />
+                        <span>Updating map data...</span>
+                    </div>
+                )}
                 {error && (
-                    <div
-                        className="flex items-center gap-2 px-4 py-2 rounded-2xl pointer-events-auto"
-                        style={{
-                            background: 'var(--color-surface)',
-                            border: '1px solid var(--color-border)',
-                            color: '#ef4444',
-                        }}
-                    >
-                        <AlertCircle size={14} />
-                        <span className="text-xs">Failed to load pins</span>
-                        <button onClick={() => refetch()} className="ml-1 text-xs underline opacity-75">
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-red-500/10 text-red-500 backdrop-blur-md text-xs font-medium shadow-md border border-red-500/20">
+                        <AlertCircle size={12} />
+                        <span>Failed to fetch pins</span>
+                        <button
+                            onClick={() => refetch()}
+                            className="pointer-events-auto ml-1 underline hover:text-red-600"
+                        >
                             Retry
                         </button>
                     </div>
                 )}
-
-                <div
-                    className="flex items-center gap-2 px-4 py-2 rounded-2xl pointer-events-auto"
-                    style={{
-                        background: 'var(--color-surface)',
-                        border: '1px solid var(--color-border)',
-                        boxShadow: 'var(--shadow-nav)',
-                    }}
-                >
-                    {isLoading ? (
-                        <RefreshCw size={14} className="animate-spin" style={{ color: 'var(--color-primary)' }} />
-                    ) : (
-                        <span className="w-2 h-2 rounded-full" style={{ background: 'var(--color-primary)' }} />
-                    )}
-                    <span className="text-sm font-semibold" style={{ color: 'var(--color-text)' }}>
-                        {isLoading ? 'Loading…' : `${visiblePins.length} ${visiblePins.length === 1 ? 'drink' : 'drinks'}`}
-                    </span>
-                </div>
-
-                <div
-                    className="flex gap-1 pointer-events-auto p-1 rounded-2xl"
-                    style={{
-                        background: 'var(--color-surface)',
-                        border: '1px solid var(--color-border)',
-                        boxShadow: 'var(--shadow-nav)',
-                    }}
-                >
-                    {FILTERS.map(({ id, label, icon: Icon }) => {
-                        const isActive = activeFilter === id;
-                        return (
-                            <button
-                                key={id}
-                                onClick={() => setActiveFilter(id)}
-                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all"
-                                style={
-                                    isActive
-                                        ? { background: 'var(--color-primary)', color: 'var(--color-primary-contrast)' }
-                                        : { color: 'var(--color-muted)' }
-                                }
-                            >
-                                <Icon size={11} />
-                                {label}
-                            </button>
-                        );
-                    })}
-                </div>
             </div>
 
-            {/* Log Drink Button*/}
+            {/* Centered Map Filter Navigation Menu */}
+            {/* Filter pushed down by changing top-4 to top-8 */}
+            <div className="absolute top-8 left-1/2 -translate-x-1/2 z-500 pointer-events-auto">
+                <MapFilter mode={mode} onChange={setMode} />
+            </div>
+
+            {/* Bottom Primary Actions */}
             <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-500 pointer-events-auto">
-                <LogDrinkButton
-                    onLog={handleLogDrink}
-                    onSnap={handleSnapDrink}
-                />
+                <LogDrinkButton onLog={() => navigate('/log')} onSnap={() => navigate('/snap')} />
             </div>
 
-            {/* Location Button */}
             <div className="absolute bottom-24 right-4 z-500 pointer-events-auto">
-                <LocationButton onClick={handleCenterLocation} />
+                <LocationButton onClick={() => mapRef.current?.centerOnLocation()} />
             </div>
         </div>
     );

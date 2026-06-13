@@ -1,12 +1,5 @@
-/**
- * DrinkPin
- *
- * A customisable Leaflet DivIcon factory for drink log pins.
- * All visual decisions live here – change colours, shapes, or HTML
- * in one place and every map pin updates automatically.
- */
 import L from 'leaflet';
-
+import {DrinkCategory, drinkCategoryConfig} from "@/types";
 export type PinVariant = 'default' | 'selected' | 'cluster';
 
 export interface DrinkPinOptions {
@@ -15,19 +8,24 @@ export interface DrinkPinOptions {
     count?: number;
 }
 
-const CATEGORY_COLORS: Record<string, string> = {
-    BEER:    '#f59e0b',
-    WINE:    '#9333ea',
-    SPIRITS: '#3b82f6',
-    COCKTAIL:'#ec4899',
-    CIDER:   '#22c55e',
-    OTHER:   '#6b7280',
+const DEFAULT_COLOR = '#64748b';
+
+const TAILWIND_HEX_MAP: Record<string, string> = {
+    'text-amber-600':   '#d97706', // BEER
+    'text-pink-600':    '#db2777', // COCKTAIL
+    'text-purple-600':  '#9333ea', // WINE
+    'text-orange-600':  '#ea580c', // SPIRITS
+    'text-slate-600':   '#475569', // OTHER
 };
 
 export function getCategoryColor(category: string): string {
-    return CATEGORY_COLORS[category?.toUpperCase()] ?? CATEGORY_COLORS.OTHER;
-}
+    const upperCategory = category?.toUpperCase() as DrinkCategory;
+    const config = drinkCategoryConfig[upperCategory];
 
+    if (!config) return DEFAULT_COLOR;
+
+    return TAILWIND_HEX_MAP[config.color] ?? DEFAULT_COLOR;
+}
 
 export function createDrinkPin(category: string, options: DrinkPinOptions = {}): L.DivIcon {
     const { variant = 'default', color } = options;
@@ -59,7 +57,6 @@ export function createDrinkPin(category: string, options: DrinkPinOptions = {}):
         popupAnchor: [0, -(size / 2 + 6)],
     });
 }
-
 
 export function createClusterPin(count: number, dominantCategory: string): L.DivIcon {
     const fill = getCategoryColor(dominantCategory);
