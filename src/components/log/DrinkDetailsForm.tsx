@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronLeft, Sparkles } from 'lucide-react';
 import { DrinkCatalogItemResponse, DrinkCategory, drinkCategoryConfig, LogDrinkRequest } from '@/types';
 import { Button, Rating } from '@/components/ui';
@@ -36,10 +36,26 @@ export const DrinkDetailsForm = ({
     const [photoUrl, setPhotoUrl] = useState<string | null>(draftPhotoUrl ?? null);
     const [isUploading, setIsUploading] = useState(false);
     const [moreOpen, setMoreOpen] = useState(false);
+    const [consumedAt, setConsumedAt] = useState(() => new Date().toISOString());
+    const [latitude, setLatitude] = useState<number | undefined>(undefined);
+    const [longitude, setLongitude] = useState<number | undefined>(undefined);
+
     const activeCategory = lockedCategory ?? category;
     const [volume, setVolume] = useState(() => DEFAULT_VOLUMES[activeCategory]);
     const subtypeSuggestions = getSubtypeSuggestions(activeCategory);
     const selectedVolumeLabel = VOLUME_PRESETS[activeCategory].find(p => p.ml === volume)?.label ?? `${volume}ml`;
+
+    useEffect(() => {
+        if (!navigator.geolocation) return;
+        navigator.geolocation.getCurrentPosition(
+            pos => {
+                setLatitude(pos.coords.latitude);
+                setLongitude(pos.coords.longitude);
+            },
+            err => console.warn('Geolocation unavailable:', err.message),
+            { timeout: 8000, maximumAge: 60_000 }
+        );
+    }, []);
 
     const handleCategoryChange = (cat: DrinkCategory) => {
         setCategory(cat);
@@ -50,13 +66,12 @@ export const DrinkDetailsForm = ({
     const handleFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
-
         try {
             setIsUploading(true);
             const uploadedUrl = await imageService.uploadDrinkLogImage(file);
             setPhotoUrl(uploadedUrl);
         } catch (error) {
-            console.error("Upload failed", error);
+            console.error('Upload failed', error);
         } finally {
             setIsUploading(false);
         }
@@ -73,15 +88,16 @@ export const DrinkDetailsForm = ({
             volumeMl: volume,
             rating: rating > 0 ? rating : undefined,
             description: notes || undefined,
-            consumedAt: new Date().toISOString(),
+            consumedAt,
             photoUrl: photoUrl || undefined,
+            latitude,
+            longitude,
         };
         onSubmit(payload);
     };
 
     return (
         <div className="min-h-screen bg-(--color-background) flex flex-col">
-            {/* ── Header ── */}
             <div className="px-4 pt-6 pb-2 flex items-center gap-3">
                 <button onClick={onBack} className="p-2 rounded-xl hover:bg-(--color-surface-muted) transition-colors">
                     <ChevronLeft size={20} className="text-(--color-text)" />
@@ -90,7 +106,6 @@ export const DrinkDetailsForm = ({
             </div>
 
             <div className="flex-1 px-4 flex flex-col gap-6 pb-12">
-                {/* ── Drink Summary Card ── */}
                 <div className="flex flex-col gap-1.5">
                     <div className="flex items-center justify-between">
                         <label className="text-sm font-medium text-(--color-text)">Drink</label>
@@ -163,24 +178,12 @@ export const DrinkDetailsForm = ({
                     </div>
                 </div>
 
-                {/* ── Photo Upload Component ── */}
                 <DrinkPhotoUpload
                     photoUrl={photoUrl}
                     isUploading={isUploading}
                     onFileSelected={handleFileSelected}
                     onRemove={() => setPhotoUrl(null)}
                 />
-
-                <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-medium">Notes</label>
-                    <textarea
-                        value={notes}
-                        onChange={e => setNotes(e.target.value)}
-                        placeholder="Tasting notes..."
-                        rows={3}
-                        className="px-4 py-3 bg-(--color-surface) border border-(--color-border) rounded-2xl resize-none focus:ring-2 focus:ring-(--color-primary) outline-none"
-                    />
-                </div>
 
                 <DrinkMoreDetails
                     isOpen={moreOpen}
@@ -194,6 +197,14 @@ export const DrinkDetailsForm = ({
                     subType={subType}
                     setSubType={setSubType}
                     subtypeSuggestions={subtypeSuggestions}
+                    consumedAt={consumedAt}
+                    setConsumedAt={setConsumedAt}
+                    latitude={latitude}
+                    setLatitude={setLatitude}
+                    longitude={longitude}
+                    setLongitude={setLongitude}
+                    notes={notes}
+                    setNotes={setNotes}
                 />
 
                 <div className="mt-2">
