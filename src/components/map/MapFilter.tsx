@@ -8,10 +8,9 @@ interface FilterConfig {
 }
 
 const FILTERS: FilterConfig[] = [
-    // Label changed from "Only me" to "Private"
-    { id: 'MINE',    label: 'Private', icon: Lock  },
-    { id: 'FRIENDS', label: 'Friends', icon: Users },
     { id: 'GLOBAL',  label: 'All',     icon: Globe },
+    { id: 'FRIENDS', label: 'Friends', icon: Users },
+    { id: 'MINE',    label: 'Private', icon: Lock  },
 ];
 
 interface MapFilterProps {
@@ -23,9 +22,7 @@ export const MapFilter = ({ mode, onChange }: MapFilterProps) => {
     return (
         <div
             className="flex p-2 rounded-2xl bg-(--color-surface)/90 backdrop-blur-md border border-(--color-border)"
-            style={{
-                boxShadow: 'var(--shadow-nav)',
-            }}
+            style={{ boxShadow: 'var(--shadow-nav)' }}
         >
             {FILTERS.map(({ id, label, icon: Icon }) => {
                 const isActive = mode === id;
