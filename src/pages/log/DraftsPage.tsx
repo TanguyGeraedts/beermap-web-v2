@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useDraftLogs, useDeleteDraftLog, useDeleteAllDraftLogs } from '@/hooks/useDraftLog';
-import { formatDistanceToNow } from 'date-fns';
+import { formatTimeAgo } from '@/utils/date';
 import { Button } from '@/components/ui';
 import { Camera, Trash2, Plus, Clock } from "lucide-react";
 
@@ -27,7 +27,6 @@ export const DraftsPage = () => {
 
     return (
         <div className="space-y-4">
-            {/* Header */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                     <Camera size={18} style={{ color: 'var(--color-primary)' }} />
@@ -36,36 +35,30 @@ export const DraftsPage = () => {
 
                 <div className="flex items-center gap-2">
                     {hasDrafts && (
-                        <button
+                        <Button
+                            variant="ghost"
+                            size="sm"
                             onClick={handleDeleteAll}
                             disabled={deleteAll.isPending}
-                            className="p-1.5 rounded-xl transition-colors disabled:opacity-40 flex items-center justify-center"
-                            style={{
-                                border: '1px solid var(--color-border)',
-                                background: 'var(--color-surface)',
-                                color: '#ef4444'
-                            }}
+                            className="px-2! rounded-xl"
+                            style={{ color: '#ef4444', borderColor: '#ef444460' }}
                             title="Delete all snaps"
                         >
                             <Trash2 size={14} />
-                        </button>
+                        </Button>
                     )}
-                    <button
+                    <Button
+                        variant="secondary"
+                        size="sm"
                         onClick={() => navigate('/snap')}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium transition-colors"
-                        style={{
-                            background: 'var(--color-surface)',
-                            border: '1px solid var(--color-border)',
-                            color: 'var(--color-muted)',
-                        }}
+                        className="rounded-xl"
                     >
                         <Plus size={14} strokeWidth={2.5} />
                         Snap
-                    </button>
+                    </Button>
                 </div>
             </div>
 
-            {/* List Layout Content */}
             <div className="space-y-3">
                 {isLoading ? (
                     <div className="rounded-2xl h-28 animate-pulse" style={{ background: 'var(--color-surface)' }} />
@@ -89,7 +82,7 @@ export const DraftsPage = () => {
                             <div className="flex-1 p-4 flex flex-col justify-between">
                                 <div className="flex items-center gap-1.5" style={{ color: 'var(--color-muted)' }}>
                                     <Clock size={11} />
-                                    <span className="text-[11px] font-medium">{formatDistanceToNow(new Date(draft.capturedAt))} ago</span>
+                                    <span className="text-[11px] font-medium">{formatTimeAgo(draft.capturedAt)}</span>
                                 </div>
                                 <div className="flex gap-2">
                                     <Button
@@ -103,10 +96,11 @@ export const DraftsPage = () => {
                                         Finish
                                     </Button>
                                     <Button
+                                        variant="secondary"
                                         size="sm"
                                         onClick={(e) => handleDeleteDraft(e, draft.id)}
-                                        className="p-2 rounded-xl transition-colors flex items-center justify-center"
-                                        style={{ color: '#ef4444', border: '1px solid var(--color-border)', background: 'var(--color-surface-muted)' }}
+                                        className="px-2! rounded-xl"
+                                        style={{ color: '#ef4444' }}
                                     >
                                         <Trash2 size={14} />
                                     </Button>

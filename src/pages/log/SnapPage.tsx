@@ -4,7 +4,8 @@ import { imageService } from '@/services/imageService';
 import { useCreateDraftLog, useDraftLogs } from '@/hooks/useDraftLog';
 import { useIsPremium } from '@/hooks/useIsPremium';
 import { DRAFT_LIMITS } from "@/config";
-import { Camera, ChevronLeft, Loader2 } from "lucide-react";
+import { Button } from '@/components/ui';
+import { Camera, ChevronLeft, Loader2, FolderOpen } from "lucide-react";
 
 export const SnapPage = () => {
     const navigate = useNavigate();
@@ -47,18 +48,30 @@ export const SnapPage = () => {
                     <Camera size={18} style={{ color: 'var(--color-primary)' }} />
                     <h1 className="text-xl font-bold" style={{ color: 'var(--color-text)' }}>Snap</h1>
                 </div>
-                <button
-                    onClick={() => navigate(-1)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium transition-colors"
-                    style={{
-                        background: 'var(--color-surface)',
-                        border: '1px solid var(--color-border)',
-                        color: 'var(--color-muted)',
-                    }}
-                >
-                    <ChevronLeft size={14} strokeWidth={2.5} />
-                    Back
-                </button>
+
+                <div className="flex items-center gap-2">
+                    {/* View Drafts Button */}
+                    <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => navigate('/drafts')}
+                        className="rounded-xl font-medium"
+                    >
+                        <FolderOpen size={14} />
+                        Drafts
+                    </Button>
+
+                    {/* Back Button */}
+                    <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => navigate(-1)}
+                        className="rounded-xl font-medium"
+                    >
+                        <ChevronLeft size={14} strokeWidth={2.5} />
+                        Back
+                    </Button>
+                </div>
             </div>
 
             {/* Core Snap Action Area */}

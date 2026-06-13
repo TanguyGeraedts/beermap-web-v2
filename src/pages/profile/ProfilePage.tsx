@@ -3,6 +3,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { useMe } from "@/hooks/useMe.ts";
 import ProfileHeader from "@/components/profile/ProfileHeader.tsx";
 import { MeResponse } from "@/types";
+import { Button } from '@/components/ui';
+import { User, Settings } from 'lucide-react';
 
 export const ProfilePage = () => {
     const { isAuthenticated } = useAuth();
@@ -26,62 +28,25 @@ export const ProfilePage = () => {
 
     return (
         <div className="space-y-4">
-            {/* Header */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                    {/* Minimalist User SVG instead of Lucide icon */}
-                    <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="var(--color-primary)"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                        <circle cx="12" cy="7" r="4" />
-                    </svg>
-                    <h1 className="text-xl font-bold" style={{ color: 'var(--color-text)' }}>
-                        Profile
-                    </h1>
+                    <User size={18} style={{ color: 'var(--color-primary)' }} />
+                    <h1 className="text-xl font-bold" style={{ color: 'var(--color-text)' }}>Profile</h1>
                 </div>
-
-                <button
+                <Button
+                    variant="secondary"
+                    size="sm"
                     onClick={() => navigate('/settings')}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium transition-colors active:scale-[0.98]"
-                    style={{
-                        background: 'var(--color-surface)',
-                        border: '1px solid var(--color-border)',
-                        color: 'var(--color-muted)',
-                    }}
+                    className="rounded-xl"
                 >
-                    {/* Minimalist Gear SVG */}
-                    <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
-                        <circle cx="12" cy="12" r="3" />
-                    </svg>
+                    <Settings size={14} strokeWidth={2.5} />
                     Settings
-                </button>
+                </Button>
             </div>
 
-            {/* Main Content Card */}
             <div
                 className="px-4 py-5 rounded-2xl space-y-5"
-                style={{
-                    background: 'var(--color-surface)',
-                    border: '1px solid var(--color-border)',
-                }}
+                style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
             >
                 {isSetupRequired ? (
                     <div className="text-center py-4" style={{ color: 'var(--color-muted)' }}>
@@ -91,7 +56,6 @@ export const ProfilePage = () => {
                     <ProfileHeader profile={profile as MeResponse} />
                 )}
 
-                {/* Navigation Links Group */}
                 <div className="grid gap-2 pt-2 border-t" style={{ borderColor: 'var(--color-border)' }}>
                     {[
                         { label: 'Stats', path: '/profile/stats' },
@@ -106,16 +70,7 @@ export const ProfilePage = () => {
                             style={{ color: 'var(--color-text)' }}
                         >
                             <span className="text-sm font-medium">{item.label}</span>
-                            <svg
-                                width="14"
-                                height="14"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="var(--color-muted)"
-                                strokeWidth="2.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-muted)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="m9 18 6-6-6-6" />
                             </svg>
                         </button>
