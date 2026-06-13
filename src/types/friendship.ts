@@ -1,3 +1,5 @@
+import {AccountType} from "@/types/auth.ts";
+
 export type FriendshipStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED' | 'REMOVED' | 'BLOCKED';
 
 export interface FriendSummary {
@@ -5,6 +7,7 @@ export interface FriendSummary {
     username: string;
     discriminator: string;
     avatarUrl?: string;
+    accountType?: AccountType
 }
 
 export interface Friendship {
@@ -13,6 +16,8 @@ export interface Friendship {
     addresseeId: string;
     status: FriendshipStatus;
     createdAt: string;
+    respondedAt?: string;
+    updatedAt?: string;
     friend?: FriendSummary; 
 }
 
