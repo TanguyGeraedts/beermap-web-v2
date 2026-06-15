@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { imageService } from '@/services/imageService';
 import { useCreateDraftLog, useDraftLogs } from '@/hooks/useDraftLog';
 import { useIsPremium } from '@/hooks/useIsPremium';
+import { useGeolocation } from '@/hooks/useGeolocation';
 import { DRAFT_LIMITS } from "@/config";
 import { Button } from '@/components/ui';
 import { Camera, ChevronLeft, Loader2, FolderOpen } from "lucide-react";
+import { localISOString } from '@/utils/time';
 
 export const SnapPage = () => {
     const navigate = useNavigate();
@@ -15,6 +17,7 @@ export const SnapPage = () => {
     const { data: drafts = [] } = useDraftLogs();
     const { isPremium } = useIsPremium();
     const createDraft = useCreateDraftLog();
+    const { getCurrentLocation } = useGeolocation();
 
     const limit = isPremium ? DRAFT_LIMITS.PREMIUM : DRAFT_LIMITS.FREE;
     const isAtLimit = drafts.length >= limit;
@@ -25,17 +28,24 @@ export const SnapPage = () => {
 
         try {
             setIsUploading(true);
-            const photoUrl = await imageService.uploadDrinkLogImage(file);
+
+            // Execute location lookup and image upload concurrently
+            const [location, photoUrl] = await Promise.all([
+                getCurrentLocation(),
+                imageService.uploadDrinkLogImage(file)
+            ]);
 
             await createDraft.mutateAsync({
                 photoUrl,
-                capturedAt: new Date().toISOString()
+                capturedAt: localISOString(),
+                latitude: location.latitude,
+                longitude: location.longitude
             });
 
             navigate('/drafts');
         } catch (error) {
             console.error("Snap failed:", error);
-        } finally {
+        } {
             setIsUploading(false);
         }
     };
@@ -50,7 +60,6 @@ export const SnapPage = () => {
                 </div>
 
                 <div className="flex items-center gap-2">
-                    {/* View Drafts Button */}
                     <Button
                         variant="secondary"
                         size="sm"
@@ -61,7 +70,6 @@ export const SnapPage = () => {
                         Drafts
                     </Button>
 
-                    {/* Back Button */}
                     <Button
                         variant="secondary"
                         size="sm"

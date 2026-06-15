@@ -48,14 +48,13 @@ export const MetricsRow = ({ summary }: MetricsRowProps) => {
                     Volume
                 </span>
                 <div className="flex flex-col items-center justify-center flex-1 mt-1">
-                    <span className="text-2xl font-black text-(--color-text) leading-none flex items-baseline justify-center">
+                    <span className="text-2xl font-black text-(--color-text) leading-none block">
                         {volumeValue}
-                        <span className="text-[10px] font-medium text-(--color-muted) ml-0.5 lowercase tracking-normal">
-                            {volumeUnit}
-                        </span>
+                        <span className="text-xs font-medium text-(--color-muted)">{volumeUnit}</span>
                     </span>
                 </div>
             </Card>
+
         </div>
     );
 };

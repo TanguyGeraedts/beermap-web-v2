@@ -3,7 +3,9 @@ import {Camera, Loader2} from 'lucide-react';
 import {imageService} from '@/services/imageService';
 import {useCreateDraftLog, useDraftLogs} from '@/hooks/useDraftLog';
 import {useIsPremium} from '@/hooks/useIsPremium';
+import {useGeolocation} from '@/hooks/useGeolocation';
 import {DRAFT_LIMITS} from "@/config";
+import {localISOString} from '@/utils/time';
 
 
 export const QuickDraftCapture = () => {
@@ -13,6 +15,7 @@ export const QuickDraftCapture = () => {
     const { data: drafts = [] } = useDraftLogs();
     const { isPremium } = useIsPremium();
     const createDraft = useCreateDraftLog();
+    const { getCurrentLocation } = useGeolocation();
 
     const limit = isPremium ? DRAFT_LIMITS.PREMIUM : DRAFT_LIMITS.FREE;
     const isAtLimit = drafts.length >= limit;
@@ -23,11 +26,17 @@ export const QuickDraftCapture = () => {
 
         try {
             setIsUploading(true);
-            const photoUrl = await imageService.uploadDrinkLogImage(file);
+
+            const [location, photoUrl] = await Promise.all([
+                getCurrentLocation(),
+                imageService.uploadDrinkLogImage(file)
+            ]);
 
             await createDraft.mutateAsync({
                 photoUrl,
-                capturedAt: new Date().toISOString()
+                capturedAt: localISOString(),
+                latitude: location.latitude,
+                longitude: location.longitude
             });
         } catch (error) {
             console.error("Quick capture failed:", error);

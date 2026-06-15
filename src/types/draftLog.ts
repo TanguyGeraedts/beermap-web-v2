@@ -13,5 +13,7 @@ export interface DraftLogResponse {
 export interface CreateDraftLogRequest {
     photoUrl: string;
     capturedAt: string;
+    latitude: number | null;
+    longitude: number | null;
 }
 
