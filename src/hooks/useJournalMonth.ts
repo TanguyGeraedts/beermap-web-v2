@@ -7,17 +7,11 @@ import type { DrinkData } from '@/components/ui/components/DrinkCalendar';
  * DrinkData map ({ "2026-06-03": 2, "2026-06-07": 5, ... }) suitable
  * for DrinkCalendar.
  *
- * Uses the existing timeline endpoint with a large page size to get all
- * logs in one shot. Once you have a dedicated calendar endpoint on the
- * backend, swap the fetcher below and delete the client-side grouping.
- *
- * @param year       Full year, e.g. 2026
- * @param monthIndex 0-based month index (0 = January), defaults to current month
+ * @param date Optional Date object representing the month to display. Defaults to current date.
  */
-export function useJournalMonth(year?: number, monthIndex?: number) {
-    const now          = new Date();
-    const resolvedYear  = year        ?? now.getFullYear();
-    const resolvedMonth = monthIndex  ?? now.getMonth();
+export function useJournalMonth(date: Date = new Date()) {
+    const resolvedYear  = date.getFullYear();
+    const resolvedMonth = date.getMonth();
 
     return useQuery<DrinkData>({
         queryKey: ['journal-month', resolvedYear, resolvedMonth],
@@ -40,6 +34,6 @@ export function useJournalMonth(year?: number, monthIndex?: number) {
 
             return counts;
         },
-        staleTime: 1000 * 60 * 5, // 5 min — calendar data doesn't need to be live
+        staleTime: 1000 * 60 * 5,
     });
 }

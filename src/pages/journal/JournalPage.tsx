@@ -1,13 +1,15 @@
+import { useState } from 'react';
 import { BookOpen, FilePen } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { DrinkCalendar } from '@/components/ui/components/DrinkCalendar';
 import { useJournalMonth } from '@/hooks/useJournalMonth';
 import { LastDrinkCard } from '@/components/journal/LastDrinkCard';
-import {Button} from "@/components/ui";
+import { Button } from "@/components/ui";
 
 export const JournalPage = () => {
     const navigate = useNavigate();
-    const { data: drinkData, isLoading } = useJournalMonth();
+    const [currentMonth, setCurrentMonth] = useState(() => new Date());
+    const { data: drinkData, isLoading } = useJournalMonth(currentMonth);
 
     const handleDayClick = (dateStr: string) => {
         navigate(`/journal/day/${dateStr}`);
@@ -44,6 +46,8 @@ export const JournalPage = () => {
             ) : (
                 <DrinkCalendar
                     drinkData={drinkData ?? {}}
+                    month={currentMonth}
+                    onMonthChange={setCurrentMonth}
                     onDayClick={handleDayClick}
                 />
             )}
