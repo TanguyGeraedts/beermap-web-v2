@@ -1,22 +1,31 @@
 import { Flame, MessageSquare } from 'lucide-react';
 import { Badge, Card, Rating } from "@/components/ui";
-import {DrinkCategory, drinkCategoryConfig, DrinkLogResponse} from "@/types";
+import { DrinkCategory, drinkCategoryConfig, DrinkLogResponse } from "@/types";
 
 interface DrinkLogCardProps {
-    drink: DrinkLogResponse;
+    drink?: DrinkLogResponse | null;
 }
 
 export const DrinkLogCard = ({ drink }: DrinkLogCardProps) => {
-    const categoryKey = (drink.category || 'BEER') as DrinkCategory;
-    const config = drinkCategoryConfig[categoryKey] || drinkCategoryConfig.OTHER;
-    const CategoryIcon = config.icon;
+    if (!drink) return null;
 
-    const formattedTime = drink.consumedAt
-        ? new Date(drink.consumedAt).toLocaleTimeString(undefined, {
-            hour: '2-digit',
-            minute: '2-digit',
-        })
-        : null;
+    const categoryKey = (drink.category || 'OTHER') as DrinkCategory;
+    const config = drinkCategoryConfig[categoryKey] || drinkCategoryConfig.OTHER;
+    const CategoryIcon = config?.icon || drinkCategoryConfig.OTHER.icon;
+
+    let formattedTime: string | null = null;
+    if (drink.consumedAt) {
+        const date = new Date(drink.consumedAt);
+        if (!isNaN(date.getTime())) {
+            formattedTime = date.toLocaleTimeString(undefined, {
+                hour: '2-digit',
+                minute: '2-digit',
+            });
+        }
+    }
+
+    const quantity = drink.quantity || 1;
+    const abvPercent = typeof drink.abvPercent === 'number' ? drink.abvPercent : null;
 
     return (
         <Card variant="default">
@@ -24,14 +33,14 @@ export const DrinkLogCard = ({ drink }: DrinkLogCardProps) => {
                 <div className="flex items-start justify-between gap-4">
                     <div className="flex gap-3 items-center">
                         <div className="flex items-center justify-center w-10 h-10 rounded-xl shrink-0 bg-(--color-surface-muted) border border-(--color-border)">
-                            <CategoryIcon size={20} className={config.color} />
+                            {CategoryIcon && <CategoryIcon size={20} className={config?.color} />}
                         </div>
                         <div>
                             <h3 className="font-bold text-sm text-(--color-text) leading-tight">
-                                {drink.displayName || drink.customDrinkName || 'Custom Drink'}
+                                {drink.displayName || drink.customDrinkName || 'Unknown Drink'}
                             </h3>
                             <p className="text-xs text-(--color-muted) flex items-center gap-1.5 mt-0.5">
-                                <span>{config.label}</span>
+                                <span>{config?.label || 'Other'}</span>
                                 {formattedTime && (
                                     <>
                                         <span className="inline-block w-1 h-1 rounded-full bg-(--color-border)" />
@@ -42,7 +51,8 @@ export const DrinkLogCard = ({ drink }: DrinkLogCardProps) => {
                         </div>
                     </div>
 
-                    {drink.rating !== undefined && drink.rating !== null && (
+                    {/* Safe Rating boundary checking */}
+                    {typeof drink.rating === 'number' && drink.rating >= 0 && (
                         <Rating value={drink.rating} size="lg" />
                     )}
                 </div>
@@ -53,15 +63,18 @@ export const DrinkLogCard = ({ drink }: DrinkLogCardProps) => {
                             {drink.subType}
                         </Badge>
                     )}
-                    {drink.abvPercent !== undefined && (
+
+                    {/* Guarded .toFixed() to ensure it only fires on valid numbers */}
+                    {abvPercent !== null && (
                         <Badge variant="default" size="sm" className="gap-1">
                             <Flame size={10} className="text-orange-500" />
-                            {drink.abvPercent.toFixed(1)}% ABV
+                            {abvPercent.toFixed(1)}% ABV
                         </Badge>
                     )}
+
                     {drink.volumeMl && (
                         <Badge variant="default" size="sm">
-                            {drink.volumeMl}ml {drink.quantity > 1 && `(x${drink.quantity})`}
+                            {drink.volumeMl}ml {quantity > 1 && `(x${quantity})`}
                         </Badge>
                     )}
                 </div>
