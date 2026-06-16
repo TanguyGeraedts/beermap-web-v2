@@ -5,7 +5,6 @@ import {useCreateDraftLog, useDraftLogs} from '@/hooks/useDraftLog';
 import {useIsPremium} from '@/hooks/useIsPremium';
 import {useGeolocation} from '@/hooks/useGeolocation';
 import {DRAFT_LIMITS} from "@/config";
-import {localISOString} from '@/utils/time';
 
 
 export const QuickDraftCapture = () => {
@@ -34,7 +33,7 @@ export const QuickDraftCapture = () => {
 
             await createDraft.mutateAsync({
                 photoUrl,
-                capturedAt: localISOString(),
+                capturedAt: new Date().toISOString(),
                 latitude: location.latitude,
                 longitude: location.longitude
             });
