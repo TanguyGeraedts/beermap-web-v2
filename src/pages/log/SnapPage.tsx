@@ -7,7 +7,6 @@ import { useGeolocation } from '@/hooks/useGeolocation';
 import { DRAFT_LIMITS } from "@/config";
 import { Button } from '@/components/ui';
 import { Camera, ChevronLeft, Loader2, FolderOpen } from "lucide-react";
-import { localISOString } from '@/utils/time';
 
 export const SnapPage = () => {
     const navigate = useNavigate();
@@ -37,7 +36,7 @@ export const SnapPage = () => {
 
             await createDraft.mutateAsync({
                 photoUrl,
-                capturedAt: localISOString(),
+                capturedAt: new Date().toISOString(),
                 latitude: location.latitude,
                 longitude: location.longitude
             });
