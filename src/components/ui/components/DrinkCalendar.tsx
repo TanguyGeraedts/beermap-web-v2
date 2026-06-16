@@ -1,28 +1,19 @@
-import { forwardRef, type HTMLAttributes, useMemo, useState } from 'react';
+import { forwardRef, type HTMLAttributes, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Beer } from 'lucide-react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-/** A map of ISO date strings (YYYY-MM-DD) to drink counts for that day. */
 export type DrinkData = Record<string, number>;
 
 type DrinkIntensity = 'none' | 'light' | 'moderate' | 'heavy';
 
 interface DrinkCalendarProps extends HTMLAttributes<HTMLDivElement> {
-    /** Map of ISO date strings to drink counts, e.g. { "2025-06-03": 2 } */
     drinkData: DrinkData;
-    /**
-     * Month to display. Defaults to current month.
-     * Pass a Date object set to any day within the desired month.
-     */
     month?: Date;
-    /**
-     * Called when user clicks a day cell. Receives the ISO date string.
-     * If omitted, clicks navigate to /journal/day/{date} via react-router.
-     */
+    /** Callback to notify parent when user changes the month */
+    onMonthChange?: (newDate: Date) => void;
     onDayClick?: (date: string, count: number) => void;
-    /** Allow navigating between months. Defaults to true. */
     navigable?: boolean;
 }
 
@@ -65,26 +56,18 @@ function isSameDay(a: Date, b: Date): boolean {
     );
 }
 
-/**
- * Returns an array of "cells" for the calendar grid.
- * Cells before the 1st and after the last are null (empty padding).
- * Week starts on Monday.
- */
 function buildCalendarGrid(year: number, month: number): (number | null)[] {
     const firstDay = new Date(year, month, 1).getDay(); // 0=Sun
-    // Convert Sunday-based (0–6) to Monday-based (0–6)
     const offset = (firstDay + 6) % 7;
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
     const cells: (number | null)[] = [];
     for (let i = 0; i < offset; i++) cells.push(null);
     for (let d = 1; d <= daysInMonth; d++) cells.push(d);
-    // Pad to complete the final week row
     while (cells.length % 7 !== 0) cells.push(null);
     return cells;
 }
 
-/** Count how many days in drinkData fall within the given year+month. */
 function computeMonthStats(
     drinkData: DrinkData,
     year: number,
@@ -129,11 +112,11 @@ const DayCell = ({ day, iso, count, isToday, onClick }: DayCellProps) => {
                 select-none
                 ${intensityStyles[intensity]}
                 ${count === 0
-                ? 'text-[var(--color-muted)] hover:bg-[var(--color-surface-muted)]'
-                : 'text-[var(--color-drink-text)] hover:brightness-110'
+                ? 'text-(--color-muted) hover:bg-(--color-surface-muted)'
+                : 'text-(--color-drink-text) hover:brightness-110'
             }
                 ${isToday
-                ? 'ring-2 ring-[var(--color-primary)] ring-offset-1 ring-offset-[var(--color-surface)] font-bold'
+                ? 'ring-2 ring-(--color-primary) ring-offset-1 ring-offset-(--color-surface) font-bold'
                 : ''
             }
             `}
@@ -151,32 +134,12 @@ const DayCell = ({ day, iso, count, isToday, onClick }: DayCellProps) => {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-/**
- * DrinkCalendar — a monthly heatmap calendar for drink logging.
- *
- * Cells are colour-coded by drink count using CSS variables:
- *   --color-drink-light      (1–2 drinks)
- *   --color-drink-moderate   (3–5 drinks)
- *   --color-drink-heavy      (6+ drinks)
- *   --color-drink-text       (text on coloured cells)
- *
- * Today's cell is ringed with --color-primary.
- * Clicking a day navigates to /journal/day/{date} (or calls onDayClick if provided).
- *
- * @example
- * const data = {
- *   "2025-06-03": 2,
- *   "2025-06-07": 5,
- *   "2025-06-14": 8,
- * };
- *
- * <DrinkCalendar drinkData={data} />
- */
 export const DrinkCalendar = forwardRef<HTMLDivElement, DrinkCalendarProps>(
     (
         {
             drinkData,
-            month,
+            month = new Date(),
+            onMonthChange,
             onDayClick,
             navigable = true,
             className = '',
@@ -187,9 +150,9 @@ export const DrinkCalendar = forwardRef<HTMLDivElement, DrinkCalendarProps>(
         const navigate = useNavigate();
         const today = useMemo(() => new Date(), []);
 
-        const [viewDate, setViewDate] = useState(() => month ?? new Date());
-        const year       = viewDate.getFullYear();
-        const monthIndex = viewDate.getMonth();
+        // Removed local useState. We purely derive this from the `month` prop now.
+        const year       = month.getFullYear();
+        const monthIndex = month.getMonth();
 
         const cells = useMemo(() => buildCalendarGrid(year, monthIndex), [year, monthIndex]);
 
@@ -198,13 +161,17 @@ export const DrinkCalendar = forwardRef<HTMLDivElement, DrinkCalendarProps>(
             [drinkData, year, monthIndex]
         );
 
-        const monthName = viewDate.toLocaleString('default', { month: 'long' });
+        const monthName = month.toLocaleString('default', { month: 'long' });
 
         function prevMonth() {
-            setViewDate(d => new Date(d.getFullYear(), d.getMonth() - 1, 1));
+            if (onMonthChange) {
+                onMonthChange(new Date(year, monthIndex - 1, 1));
+            }
         }
         function nextMonth() {
-            setViewDate(d => new Date(d.getFullYear(), d.getMonth() + 1, 1));
+            if (onMonthChange) {
+                onMonthChange(new Date(year, monthIndex + 1, 1));
+            }
         }
 
         function handleDayClick(iso: string, count: number) {
