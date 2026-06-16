@@ -1,4 +1,5 @@
 import { createContext } from 'react';
+import type { RefetchOptions, QueryObserverResult } from '@tanstack/react-query';
 import type {
   CreateProfileRequest,
   MeResponse,
@@ -10,7 +11,7 @@ export type ProfileContextValue = {
   needsSetup: boolean;
   isLoading: boolean;
   error: string | null;
-  refetch: () => Promise<void>;
+  refetch: (options?: RefetchOptions) => Promise<QueryObserverResult<MeResponse | null, Error>>;
   createProfile: (payload: CreateProfileRequest) => Promise<MeResponse>;
   updateProfile: (payload: UpdateProfileRequest) => Promise<MeResponse>;
   uploadProfileImage: (file: File) => Promise<string>;
