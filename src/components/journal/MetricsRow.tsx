@@ -1,18 +1,25 @@
 import { Card } from "@/components/ui";
 
 interface MetricsRowProps {
-    summary: {
-        totalDrinks: number;
-        averageRating: number;
-        totalVolume: number;
-    };
+    summary?: {
+        totalDrinks?: number | null;
+        averageRating?: number | null;
+        totalVolume?: number | null;
+    } | null;
 }
 
 export const MetricsRow = ({ summary }: MetricsRowProps) => {
-    const outOfFiveValue = summary.averageRating > 0 ? summary.averageRating / 2 : 0;
+    // 1. Fallback values if properties are missing or null
+    const totalDrinks = summary?.totalDrinks || 0;
+    const averageRating = summary?.averageRating || 0;
+    const totalVolume = summary?.totalVolume || 0;
 
-    const isLitres = summary.totalVolume >= 1000;
-    const volumeValue = isLitres ? (summary.totalVolume / 1000).toFixed(2) : summary.totalVolume;
+    // 2. Fail-safe math logic
+    const outOfFiveValue = averageRating > 0 ? averageRating / 2 : 0;
+
+    const safeVolume = Math.max(0, totalVolume);
+    const isLitres = safeVolume >= 1000;
+    const volumeValue = isLitres ? (safeVolume / 1000).toFixed(2) : safeVolume;
     const volumeUnit = isLitres ? 'L' : 'ml';
 
     return (
@@ -24,7 +31,7 @@ export const MetricsRow = ({ summary }: MetricsRowProps) => {
                 </span>
                 <div className="flex flex-col items-center justify-center flex-1 mt-1">
                     <span className="text-2xl font-black text-(--color-text) leading-none block">
-                        {summary.totalDrinks}
+                        {totalDrinks}
                     </span>
                 </div>
             </Card>
@@ -49,12 +56,12 @@ export const MetricsRow = ({ summary }: MetricsRowProps) => {
                 </span>
                 <div className="flex flex-col items-center justify-center flex-1 mt-1">
                     <span className="text-2xl font-black text-(--color-text) leading-none block">
+                        {/* If volume is 0, just show '0ml' instead of blank space */}
                         {volumeValue}
                         <span className="text-xs font-medium text-(--color-muted)">{volumeUnit}</span>
                     </span>
                 </div>
             </Card>
-
         </div>
     );
 };
