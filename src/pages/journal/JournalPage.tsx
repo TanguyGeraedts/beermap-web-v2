@@ -18,14 +18,14 @@ export const JournalPage = () => {
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                    <BookOpen size={18} className="text-[var(--color-primary)]" />
-                    <h1 className="text-xl font-bold text-[var(--color-text)]">Journal</h1>
+                    <BookOpen size={18} className="text-(--color-primary)" />
+                    <h1 className="text-xl font-bold text-(--color-text)">Journal</h1>
                 </div>
 
                 <Button
                     variant="secondary"
                     size="sm"
-                    className="gap-1.5 rounded-xl !px-3 !py-1.5 text-sm font-medium text-[var(--color-muted)]"
+                    className="gap-1.5 rounded-xl px-3! py-1.5! text-sm font-medium text-(--color-muted)"
                     onClick={() => navigate('/drafts')}
                 >
                     <FilePen size={14} />
@@ -39,7 +39,7 @@ export const JournalPage = () => {
             {/* Monthly Grid Calendar Component View */}
             {isLoading ? (
                 <div
-                    className="rounded-xl h-96 animate-pulse bg-[var(--color-surface)]"
+                    className="rounded-xl h-96 animate-pulse bg-(--color-surface)"
                 />
             ) : (
                 <DrinkCalendar
