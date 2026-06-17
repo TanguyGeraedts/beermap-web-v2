@@ -76,6 +76,25 @@
   --color-drink-text:     #211807;
 }
 
+/* ─── Safe Area Insets (iOS notch / Dynamic Island / home indicator) ─────────── */
+:root {
+  --safe-top:    env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left:   env(safe-area-inset-left, 0px);
+  --safe-right:  env(safe-area-inset-right, 0px);
+}
+
+/* Apply these to the SPECIFIC fixed elements that sit at the screen edges —
+   e.g. your top header gets .safe-top, your bottom nav/tab bar gets .safe-bottom.
+   Do NOT apply these to #root or body — that's what causes the "everything
+   shifts up" bug, since it eats into the height the rest of your flex layout
+   is measuring against. */
+.safe-top    { padding-top: var(--safe-top); }
+.safe-bottom { padding-bottom: var(--safe-bottom); }
+.safe-left   { padding-left: var(--safe-left); }
+.safe-right  { padding-right: var(--safe-right); }
+.safe-x      { padding-left: var(--safe-left); padding-right: var(--safe-right); }
+
 /* ─── Base Application Rules ─────────────────────────────────────────────────── */
 * {
   box-sizing: border-box;
