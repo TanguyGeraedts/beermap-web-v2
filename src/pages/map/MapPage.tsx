@@ -56,8 +56,7 @@ export const MapPage = () => {
             </div>
 
             {/* Centered Map Filter Navigation Menu */}
-            {/* Filter pushed down by changing top-4 to top-8 */}
-            <div className="absolute top-8 left-1/2 -translate-x-1/2 z-500 pointer-events-auto">
+            <div className="absolute top-[calc(1rem+env(safe-area-inset-top))] left-1/2 -translate-x-1/2 z-500 pointer-events-auto">
                 <MapFilter mode={mode} onChange={setMode} />
             </div>
 
