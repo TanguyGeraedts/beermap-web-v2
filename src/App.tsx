@@ -20,6 +20,9 @@ import {LegalPage} from "@/pages/meta/LegalPage.tsx";
 import {JournalPage} from "@/pages/journal/JournalPage.tsx";
 import {JournalDayPage} from "@/pages/journal/JournalDayPage.tsx";
 import {useTheme} from "@/hooks/useTheme.ts";
+import {DrinkCatalogPage} from "@/pages/dev/DrinkCatalogPage.tsx";
+import {AddDrinkCatalogPage} from "@/pages/dev/AddDrinkCatalogPage.tsx";
+import {EditDrinkCatalogPage} from "@/pages/dev/EditDrinkCatalogPage.tsx";
 
 const App = () => {
     useTheme();
@@ -54,7 +57,10 @@ const App = () => {
                     <Route path="/journal/day/:date" element={<JournalDayPage />} />
 
                     {/* DEV PAGES: */}
-                    <Route path="/ui-components" element={<UIComponentsPage />} />
+                    <Route path="/admin/ui-components" element={<UIComponentsPage />} />
+                    <Route path="/admin/catalog" element={<DrinkCatalogPage />} />
+                    <Route path="/admin/catalog/new" element={<AddDrinkCatalogPage />} />
+                    <Route path="/admin/catalog/:id/edit" element={<EditDrinkCatalogPage />} />
                 </Route>
 
                 {/* Redirect unknown routes */}
