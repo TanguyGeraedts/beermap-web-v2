@@ -54,23 +54,23 @@ export const CheersButton = ({ cheeredByMe, isPending, onToggle }: Props) => {
                 disabled={isPending}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 disabled:opacity-50 select-none active:scale-95"
                 style={{
-                    background: cheeredByMe ? 'var(--color-ring-soft)' : '#f5f1e6',
-                    color: cheeredByMe ? 'var(--color-primary)' : '#8b7d6b',
-                    border: `1px solid ${cheeredByMe ? 'var(--color-ring)' : '#e8ddc8'}`,
+                    background: cheeredByMe ? 'var(--color-ring-soft)' : 'var(--color-surface-muted)',
+                    color: cheeredByMe ? 'var(--color-primary)' : 'var(--color-muted)',
+                    border: `1px solid ${cheeredByMe ? 'var(--color-ring)' : 'var(--color-border)'}`,
                 }}
             >
-                <span
-                    className="flex items-center justify-center"
-                    style={{
-                        animation: animating ? 'cheers-clink 0.55s ease-out' : undefined,
-                    }}
-                >
-                    <Beer
-                        size={18}
-                        fill={cheeredByMe ? "currentColor" : "none"}
-                        strokeWidth={cheeredByMe ? 2.5 : 2}
-                    />
-                </span>
+            <span
+                className="flex items-center justify-center"
+                style={{
+                    animation: animating ? 'cheers-clink 0.55s ease-out' : undefined,
+                }}
+            >
+                <Beer
+                    size={18}
+                    fill={cheeredByMe ? "currentColor" : "none"}
+                    strokeWidth={cheeredByMe ? 2.5 : 2}
+                />
+            </span>
                 <span>Cheers</span>
             </button>
 

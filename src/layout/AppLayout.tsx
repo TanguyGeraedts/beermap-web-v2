@@ -12,8 +12,8 @@ export const AppLayout = () => {
     if (!profile.isAllowed) return profile.redirectComponent;
 
     return (
-        <div className="min-h-dvh flex flex-col bg-(--color-app-bg) text-(--color-text)">
-            <main className="flex-1 w-full mx-auto max-w-4xl px-4 pt-8 pb-24">
+        <div className="min-h-dvh flex flex-col bg-app-bg text-text">
+            <main className="flex-1 w-full mx-auto max-w-4xl px-4 pt-[calc(2rem+env(safe-area-inset-top))] pb-[calc(4rem+env(safe-area-inset-bottom))]">
                 <Outlet />
             </main>
             <BottomNavbar />
