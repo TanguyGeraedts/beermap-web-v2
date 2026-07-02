@@ -46,11 +46,18 @@ export const SettingsPage = () => {
                         style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}
                     >
                         <button
-                            onClick={() => navigate('/ui-components')}
-                            className="w-full text-left text-sm font-medium px-3 py-2.5 rounded-xl transition-colors hover:bg-[var(--color-ring-soft)]"
+                            onClick={() => navigate('/admin/ui-components')}
+                            className="w-full text-left text-sm font-medium px-3 py-2.5 rounded-xl transition-colors hover:bg-ring-soft"
                             style={{ color: 'var(--color-text)' }}
                         >
                             Open UI Components
+                        </button>
+                        <button
+                            onClick={() => navigate('/admin/catalog')}
+                            className="w-full text-left text-sm font-medium px-3 py-2.5 rounded-xl transition-colors hover:bg-ring-soft"
+                            style={{ color: 'var(--color-text)' }}
+                        >
+                            Catalog
                         </button>
                     </div>
                 </div>
